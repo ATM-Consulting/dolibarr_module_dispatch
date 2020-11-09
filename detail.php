@@ -465,7 +465,7 @@ function printJSTabImportAddLine()
 				}
 			}).done(function(json_results) {
 				console.log(json_results);
-				updateImputOptions(target, json_results, selectedItem);
+				updateInputOptions(target, json_results, selectedItem);
 			});
 		}
 
@@ -476,45 +476,7 @@ function printJSTabImportAddLine()
 		 * @param {array} data an array of object
 		 * @param {string} selected The current selected value
 		 */
-		function updateImputOptions(target, data = false, selected = -1 )
-		{
-
-			/* Remove all options from the select list */
-			target.empty();
-			target.prop("disabled", true);
-
-			if(Array.isArray(data))
-			{
-				/* Insert the new ones from the array above */
-				for(var i= 0; i < data.length; i++)
-				{
-					let item = data[i];
-					let newOption =  $('<option>', {
-						value: item.id,
-						text : item.label
-					});
-
-					if(selected == item.id){
-						newOption.prop('selected');
-					}
-
-					target.append(newOption);
-				}
-
-				if(data.length > 0){
-					target.prop("disabled", false);
-				}
-			}
-		}
-
-		/**
-		 * add array element into select field
-		 *
-		 * @param {jQuery} target The select input jquery element
-		 * @param {array} data an array of object
-		 * @param {string} selected The current selected value
-		 */
-		function updateImputOptions(target, data = false, selectedItem = -1 )
+		function updateInputOptions(target, data = false, selectedItem = -1 )
 		{
 
 			/* Remove all options from the select list */
