@@ -41,6 +41,9 @@ function _get(&$PDOdb, $get) {
 		case 'autocomplete_lot_number':
             __out(_autocomplete_lot_number($PDOdb,GETPOST('productid')),'json');
             break;
+		case 'measuringunits':
+			__out(_measuringUnits(GETPOST('type')), 'json');
+			break;
 	}
 
 }
@@ -159,6 +162,7 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
 			$Tres[$asset->serial_number]['qty'] = $asset->contenancereel_value;
 			$Tres[$asset->serial_number]['unite_string'] = ($asset->assetType->measuring_units == 'unit') ? 'unité(s)' : measuring_units_string($asset->contenancereel_units, $asset->assetType->measuring_units);
 			$Tres[$asset->serial_number]['unite'] = ($asset->assetType->measuring_units == 'unit') ? 'unité(s)' : $asset->contenancereel_units;
+			$Tres[$asset->serial_number]['measuring_units'] = $asset->assetType->measuring_units;
 		}
 	}
 
@@ -275,5 +279,47 @@ function _set_all_lines_is_prepared(TPDOdb &$PDOdb, $fk_expedition, $is_prepared
 	}
 
 	return array('success' => $countFail == 0, 'message' => $message);
+}
+
+function _measuringUnits($measuring_style)
+{
+	global $langs, $db;
+
+	$langs->load("other");
+	$TArray = array();
+
+
+	require_once DOL_DOCUMENT_ROOT.'/core/class/cunits.class.php';
+	$measuringUnits = new CUnits($db);
+
+	$filter = array();
+	$filter['t.active'] = 1;
+	if ($measuring_style) $filter['t.unit_type'] = $measuring_style;
+
+	$result = $measuringUnits->fetchAll(
+		'',
+		'',
+		0,
+		0,
+		$filter
+	);
+
+	if ($result > 0) {
+		foreach ($measuringUnits->records as $lines)
+		{
+			$obj = new stdClass();
+
+			$obj->id = $lines->id;
+			$obj->short_label = $lines->short_label;
+			$obj->scale = $lines->scale;
+
+			if ($measuring_style == 'time') $obj->label = $langs->transnoentitiesnoconv(ucfirst($lines->label));
+			else  $obj->label = $langs->transnoentitiesnoconv($lines->label);
+
+			$TArray[] = $obj;
+		}
+	}
+
+	return $TArray;
 }
 

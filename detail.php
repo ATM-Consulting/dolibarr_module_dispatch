@@ -20,7 +20,7 @@
 
 	$expedition = new Expedition($db);
 	$expedition->fetch($id, $ref);
-	
+
 	$action = GETPOST('action');
 	$TImport = _loadDetail($PDOdb, $expedition);
 
@@ -101,7 +101,7 @@
 
 			$PDOdb->Execute($sql);
 			$Tres = $PDOdb->Get_All();
-			
+
 			foreach ($Tres as $res)
 			{
 				$TImport[] = array(
@@ -124,17 +124,17 @@
 	function _addExpeditiondetLine(&$PDOdb,&$TImport,&$expedition,$numserie)
 	{
 		global $db;
-		
+
 		//Charge l'asset lié au numéro de série dans le fichier
 		$asset = new TAsset;
 		if($asset->loadBy($PDOdb,$numserie,'serial_number')){
-			
+
 			//Charge le produit associé à l'équipement
 			$prodAsset = new Product($db);
 			$prodAsset->fetch($asset->fk_product);
 
 			$fk_line_expe = (int)GETPOST('lineexpeditionid');
-			if( empty($fk_line_expe) ) { 
+			if( empty($fk_line_expe) ) {
 				//Récupération de l'indentifiant de la ligne d'expédition concerné par le produit
 				foreach($expedition->lines as $expeline){
 					if($expeline->fk_product == $prodAsset->id){
@@ -142,7 +142,7 @@
 					}
 				}
 			}
-			
+
 			//Sauvegarde (ajout/MAJ) des lignes de détail d'expédition
 			$dispatchdetail = new TDispatchDetail;
 
@@ -161,8 +161,8 @@
 			$dispatchdetail->lot_number = $asset->lot_number;
 			$dispatchdetail->weight = (GETPOST('quantity')) ? GETPOST('quantity') : $asset->contenancereel_value;
 			$dispatchdetail->weight_reel = (GETPOST('quantity')) ? GETPOST('quantity') : $asset->contenancereel_value;
-			$dispatchdetail->weight_unit = $asset->contenancereel_units;
-			$dispatchdetail->weight_reel_unit = $asset->contenancereel_units;
+			$dispatchdetail->weight_unit = (GETPOST('quantity_unit')) ? GETPOST('quantity_unit') : $asset->contenancereel_units;
+			$dispatchdetail->weight_reel_unit = (GETPOST('quantity_unit')) ? GETPOST('quantity_unit') : $asset->contenancereel_units;
 			$dispatchdetail->is_prepared = 0;
 
 			$fk_expeditiondet_asset = $dispatchdetail->save($PDOdb);
@@ -178,7 +178,7 @@
 					,'fk_expeditiondet'=>$fk_line_expe
 					,'lot_number'=>$asset->lot_number
 					,'quantity'=> (GETPOST('quantity')) ? GETPOST('quantity') : $asset->contenancereel_value
-					,'quantity_unit'=> (GETPOST('quantity')) ? GETPOST('quantity') : $asset->contenancereel_units
+					,'quantity_unit'=> (GETPOST('quantity_unit')) ? GETPOST('quantity_unit') : $asset->contenancereel_units
 					,'is_prepared' => 0
 				);
 			}
@@ -196,22 +196,22 @@ function fiche(&$PDOdb,&$expedition, &$TImport)
 	llxHeader();
 
 	$head = shipping_prepare_head($expedition);
-	
+
 	$title=$langs->trans("Shipment");
 	dol_fiche_head($head, 'dispatch', $title, -1, 'sending');
-	
+
 	enteteexpedition($expedition);
-	
+
 	if($expedition->statut == 0 && ! empty($conf->global->DISPATCH_USE_IMPORT_FILE))
 	{
 		//Form pour import de fichier
 		echo '<br>';
 
 		$form=new TFormCore('auto','formimport','post', true);
-		
+
 		echo $form->hidden('action', 'importfile');
 		echo $form->hidden('id', $expedition->id);
-		
+
 		echo $form->fichier('Fichier à importer','file1','',80);
 		echo $form->btsubmit('Envoyer', 'btsend');
 
@@ -236,7 +236,7 @@ function tabImport(&$TImport,&$expedition)
 	echo $form->hidden('id', $expedition->id);
 
 	$PDOdb=new TPDOdb;
-	
+
 	print load_fiche_titre($langs->trans('DispatchItemCountDispatch', count($TImport)), '', '');
 
 	$fullColspan = 4;
@@ -262,10 +262,10 @@ function tabImport(&$TImport,&$expedition)
 ?>
 			<td>&nbsp;</td>
 		</tr>
-		
+
 	<?php
 		$prod = new Product($db);
-		
+
 		$form->Set_typeaff('view');
 
 		$canEdit = $expedition->statut == 0 || (! empty($conf->global->STOCK_CALCULATE_ON_SHIPMENT_CLOSE) && $expedition->statut == 1);
@@ -273,19 +273,19 @@ function tabImport(&$TImport,&$expedition)
 		if(! empty($TImport)){
 
 			foreach ($TImport as $k=>$line) {
-							
+
 				if($prod->id==0 || $line['ref']!= $prod->ref) {
 					if(!empty( $line['fk_product']))$prod->fetch($line['fk_product']);
 					else $prod->fetch('', $line['ref']);
-				} 		
-				
+				}
+
 				$asset = new TAsset;
 				$asset->loadBy($PDOdb,$line['numserie'],'serial_number');
 				$asset->load_asset_type($PDOdb);
-				
+
 				$assetLot = new TAssetLot;
 				$assetLot->loadBy($PDOdb,$line['lot_number'],'lot_number');
-				
+
 				$Trowid = TRequeteCore::get_id_from_what_you_want($PDOdb, MAIN_DB_PREFIX."expeditiondet_asset",array('fk_asset'=>$asset->rowid,'fk_expeditiondet'=>$line['fk_expeditiondet']));
 				?><tr class="oddeven">
 					<td><?php echo $prod->getNomUrl(1).$form->hidden('TLine['.$k.'][fk_expeditiondet_asset]', $line['fk_expeditiondet_asset']).$form->hidden('TLine['.$k.'][fk_product]', $prod->id).$form->hidden('TLine['.$k.'][ref]', $prod->ref).$form->hidden('TLine['.$k.'][fk_expeditiondet]', $line['fk_expeditiondet']) ?></td>
@@ -293,7 +293,7 @@ function tabImport(&$TImport,&$expedition)
 					<td><a href="<?php echo dol_buildpath('/' . ATM_ASSET_NAME . '/fiche_lot.php?id='.$assetLot->rowid,1); ?>"><?php echo $form->texte('','TLine['.$k.'][lot_number]', $line['lot_number'], 30); ?></a></td>
 <?php } ?>
 					<td><a href="<?php echo dol_buildpath('/' . ATM_ASSET_NAME . '/fiche.php?id='.$asset->rowid,1); ?>"><?php echo $form->texte('','TLine['.$k.'][numserie]', $line['numserie'], 30); ?></a></td>
-					<td><?php echo $line['quantity'] . ' ' . (($asset->assetType->measuring_units == 'unit') ? 'unité(s)' : measuring_units_string($line['quantity_unit'],$asset->assetType->measuring_units)); ?></td>
+					<td><?php echo $line['quantity'] . ' ' . (($asset->assetType->measuring_units == 'unit') ? 'unité(s)' : measuring_units_string('', '', ($line['quantity_unit']))); ?></td>
 <?php
 		if(! empty($conf->global->DISPATCH_SHIPPING_LINES_CAN_BE_CHECKED_PREPARED))
 		{
@@ -311,7 +311,7 @@ function tabImport(&$TImport,&$expedition)
 		if(empty($reshook)) echo $hookmanager->resPrint;
 ?>
 					<td>
-						<?php 
+						<?php
 							if($canEdit) echo '<a href="?action=deleteline&k='.$k.'&id='.$expedition->id.'&rowid='.$Trowid[0].'">'.img_delete().'</a>';
 						?>
 					</td>
@@ -407,7 +407,7 @@ function tabImportAddLine(&$PDOdb, &$expedition, $form, $fullColspan)
 <?php } ?>
 					</td>
 					<td id="newline_numserie" style="visibility:hidden"><?php echo $form->combo_sexy('','numserie',$TSerialNumber,''); ?></td>
-					<td id="newline_quantity" style="visibility:hidden"><input type="number" name="quantity" id="quantity" class="text" min="0" /> 
+					<td id="newline_quantity" style="visibility:hidden"><input type="number" name="quantity" id="quantity" class="text" min="0" />
 						<?php
 						if(intval(DOL_VERSION) < 10 ) {
 							echo $DoliFormProduct->load_measuring_units('quantity_unit" id="quantity_unit', 'weight');
@@ -446,6 +446,107 @@ function printJSTabImportAddLine()
 
 ?>
 	<script>
+
+
+		/**
+		 * Update mesuring unit into select
+		 *
+		 * @param {jQuery} target The select input jquery element
+		 * @param {string} type The mesuring type
+		 */
+		function updateMesuringUnit(target, type, selectedItem = -1){
+
+			$.ajax({
+				url: 'script/interface.php',
+				method: 'GET',
+				data: {
+					type: type,
+					get:'measuringunits'
+				}
+			}).done(function(json_results) {
+				console.log(json_results);
+				updateImputOptions(target, json_results, selectedItem);
+			});
+		}
+
+		/**
+		 * add array element into select field
+		 *
+		 * @param {jQuery} target The select input jquery element
+		 * @param {array} data an array of object
+		 * @param {string} selected The current selected value
+		 */
+		function updateImputOptions(target, data = false, selected = -1 )
+		{
+
+			/* Remove all options from the select list */
+			target.empty();
+			target.prop("disabled", true);
+
+			if(Array.isArray(data))
+			{
+				/* Insert the new ones from the array above */
+				for(var i= 0; i < data.length; i++)
+				{
+					let item = data[i];
+					let newOption =  $('<option>', {
+						value: item.id,
+						text : item.label
+					});
+
+					if(selected == item.id){
+						newOption.prop('selected');
+					}
+
+					target.append(newOption);
+				}
+
+				if(data.length > 0){
+					target.prop("disabled", false);
+				}
+			}
+		}
+
+		/**
+		 * add array element into select field
+		 *
+		 * @param {jQuery} target The select input jquery element
+		 * @param {array} data an array of object
+		 * @param {string} selected The current selected value
+		 */
+		function updateImputOptions(target, data = false, selectedItem = -1 )
+		{
+
+			/* Remove all options from the select list */
+			target.empty();
+			target.prop("disabled", true);
+
+			if(Array.isArray(data))
+			{
+				/* Insert the new ones from the array above */
+				for(var i= 0; i < data.length; i++)
+				{
+					let item = data[i];
+					let newOption =  $('<option>', {
+						value: item.id,
+						text : item.label
+					});
+
+					if(selectedItem == item.id){
+						newOption.prop('selected');
+					}
+
+					target.append(newOption);
+				}
+
+				if(data.length > 0){
+					target.prop("disabled", false);
+				}
+			}
+		}
+
+
+
 		$(document).ready(function() {
 
 			$('#lot_number').change(function() {
@@ -488,9 +589,12 @@ function printJSTabImportAddLine()
 							var qtyAuto = Math.min(qtyOrder, obj.qty)
 							$('#quantity').val(qtyAuto).prop('max', qtyAuto);
 							if(obj.unite != 'unité(s)'){
+
+								updateMesuringUnit($('#quantity_unit'), obj.measuring_units, obj.unite);
+
 								$('#quantity_unit').show();
 								$('#units_label').remove();
-								$('#quantity_unit option[value='+obj.unite+']').attr("selected","selected");
+								//$('#quantity_unit option[value='+obj.unite+']').attr("selected","selected");
 							}
 							else if(! $('#quantity_unit').is(':hidden'))
 							{
@@ -662,7 +766,7 @@ function enteteexpedition(&$expedition) {
 	global $langs, $db, $user, $hookmanager, $conf;
 
 	$form =	new Form($db);
-	
+
 	$soc = new Societe($db);
 	$soc->fetch($expedition->socid);
 
@@ -721,7 +825,7 @@ function enteteexpedition(&$expedition) {
 
 		dol_banner_tab($expedition, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
 	}
-	
+
     print '<table class="noborder" width="100%">';
 
     if(! $hasDolBannerTab)
@@ -780,7 +884,7 @@ function enteteexpedition(&$expedition) {
     print '<table class="nobordernopadding" width="100%"><tr><td>';
     print $langs->trans('DateDeliveryPlanned');
     print '</td>';
-	
+
     print '</tr></table>';
     print '</td><td colspan="2">';
 	print $expedition->date_delivery ? dol_print_date($expedition->date_delivery,'dayhourtext') : '&nbsp;';
