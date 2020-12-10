@@ -5,7 +5,15 @@ All notable changes to this project will be documented in this file.
 
 ## Version 3.4.0
 
- - [x] Préparations entité A disponibles sur CF entité B doit uniquement affiche celles au statut clôturée
+ ## 2020-12-10
+
+### Added
+
+
+
+### Changed
+
+- [x] Préparations entité A disponibles sur CF entité B doit uniquement affiche celles au statut clôturée
 
  - [x] Équipement : ajout code inventaire, VPN, n° logiciel, Notes
 
@@ -25,14 +33,3 @@ All notable changes to this project will be documented in this file.
  - [x] expédition traitée réception affichage détail
 
 
-## 2020-04-21
-
-### Added
-
-- NEW Instance monitoring
-
-### Changed
-
-- FIX webmodule element definition to be compatible Dolibarr call
-- FIX webpassword element definition to be compatible Dolibarr call
-- FIX webinstance element definition to be compatible Dolibarr call
