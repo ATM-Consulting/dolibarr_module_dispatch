@@ -26,7 +26,7 @@ All notable changes to this project will be documented in this file.
         dans le module cliama , lorsque que l'on est sous l'entité ama-shanghai , on doit activer la conf  
         Convertir les produits composés en bloc titre/sous-total 
 
- - [x] Case doit se cocher pour éviter la double réception
+ - [x] Case se coche pour éviter la double réception
         
         
     
