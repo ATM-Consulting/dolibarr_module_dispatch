@@ -63,9 +63,10 @@ class ActionsDispatch
                                  *on ne remonte que les expedition au statut cloturée
                                  * ou bien les expeditions traitées
                                  */
-
-								if($obj->fk_statut == Expedition::STATUS_CLOSED){
-									$TShipments[] = $obj;
+                               if ($obj) {
+                                    if($obj->fk_statut == Expedition::STATUS_CLOSED){
+                                        $TShipments[] = $obj;
+                                    }
 								} else {
 									dol_syslog(__METHOD__.' $obj='.var_export($obj,true), LOG_ERR);
 								}
