@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## Version 3.4 [2020-12-10]
+## Version 3.3.4 [2020-12-10]
 
 ### Added
 
