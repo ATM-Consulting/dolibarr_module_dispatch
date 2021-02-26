@@ -569,7 +569,7 @@ global $langs, $db, $conf;
 		$entrepot = new Entrepot($db);
 		$entrepot->fetch('','Neuf');
 		
-		print " <b>Entrepôt</b> ".$formproduct->selectWarehouses($entrepot->id,'id_entrepot','',1);
+		print " <b>Entrepôt</b> ".$formproduct->selectWarehouses($entrepot->id,'id_entrepot','', empty($conf->global->DISPATCH_MANDATORY_WAREHOUSE_ON_CF_ASSET_RECEPTION) ? 1 : 0);
 		
 		echo $form->btsubmit('Créer les équipements', 'bt_create');
 	}
