@@ -796,7 +796,7 @@ function _loadDetail(&$PDOdb,&$commandefourn){
 				);
 			}
 		} else{
-			setEventMessage($langs->trans('ErrorAtResultSet'), 'resultSet');
+			setEventMessage($langs->trans('ErrorAtResultSet', 'resultSet'), array(), 'errors');
 		}
 	}
 
@@ -966,7 +966,7 @@ function _show_product_ventil(&$TImport, &$commande,&$form) {
 		}
 		$db->free($resql);
 	} else{
-		setEventMessage($langs->trans('ErrorAtResultSet'), 'resql');
+		setEventMessage($langs->trans('ErrorAtResultSet', 'resql'), 'errors');
 		dol_syslog(__METHOD__.' $resql='.var_export($resql,true), LOG_ERR);
 	}
 
