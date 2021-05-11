@@ -1,5 +1,6 @@
 <?php
 
+if (!defined('NOTOKENRENEWAL')) define('NOTOKENRENEWAL', 1);
 
 set_time_limit(0);
 

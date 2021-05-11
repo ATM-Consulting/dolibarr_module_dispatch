@@ -43,7 +43,7 @@ require('../config.php');
 $myparam = isset($_GET["myparam"])?$_GET["myparam"]:'';
 
 // Protection if external user
-if ($user->societe_id > 0)
+if ($user->socid > 0)
 {
 	//accessforbidden();
 }
