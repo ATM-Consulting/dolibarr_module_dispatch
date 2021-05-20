@@ -593,15 +593,15 @@ function printJSTabImportAddLine()
 							var numserie = $(this).val();
 
 							if(numserie && numserie == -2) {
-								$('#quantity').val(totalAssetsNumber);
-								$('#quantity').removeAttr('max');
+								$('#quantity').hide(); // Only hide visual information but keep real value (only one unit for one asset)
+								$('#units_label').text('Total : ' + totalAssetsNumber + ' num. série'); // Show only visual information of assets total number in the OF
 								$('#newline_quantity').css({ visibility: 'visible' });
 							}
 							else {
 								if(numserie && numserie.length > 0)
 								{
-									$('#quantity').val(obj.qty);
-									$('#quantity').attr('max', 1);
+									$('#quantity').show();
+									$('#units_label').text(obj.unite);
 									$('#newline_quantity').css({ visibility: 'visible' });
 								}
 								else
