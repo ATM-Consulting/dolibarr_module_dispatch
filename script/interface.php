@@ -148,6 +148,7 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
 
 	$PDOdb->Execute($sql);
 	$TAssetIds = $PDOdb->Get_All();
+	$totalAssets = count($TAssetIds);
 
 	$Tres = array();
 	foreach ($TAssetIds as $res)
@@ -163,6 +164,7 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
 			$Tres[$asset->serial_number]['unite_string'] = ($asset->assetType->measuring_units == 'unit') ? 'unité(s)' : measuring_units_string($asset->contenancereel_units, $asset->assetType->measuring_units);
 			$Tres[$asset->serial_number]['unite'] = ($asset->assetType->measuring_units == 'unit') ? 'unité(s)' : $asset->contenancereel_units;
 			$Tres[$asset->serial_number]['measuring_units'] = $asset->assetType->measuring_units;
+			$Tres['totalAssets'] = $totalAssets;
 		}
 	}
 
