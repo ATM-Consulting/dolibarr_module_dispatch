@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- NEW: automatically add all the assets contained in OF with the Add automatically select option *20/05/2021* - 3.5.0
 - FIX: missing en_US translations *22/04/2021* - 3.4.1
 
 ## Version 3.4.0 [2020-12-10]
