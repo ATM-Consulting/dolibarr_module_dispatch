@@ -266,7 +266,7 @@ class ActionsDispatch
 
 						foreach ($TRecepDetail as $detail) {
 							if(!empty($conf->global->DISPATCH_GROUP_DETAILS_ON_PDF)){
-								$newComparaison = $this->getArrayForPriceCompare($detail, $asset, $outputlangs);
+								$newComparaison = $this->getArrayForAssetToLineDescCompare($detail, $asset, $outputlangs);
 
 								$isGrouped = false;
 								if(!empty($TCompareDetails)){
