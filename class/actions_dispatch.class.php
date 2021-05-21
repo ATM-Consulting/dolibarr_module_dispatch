@@ -74,7 +74,7 @@ class ActionsDispatch
 							}
 
 						} else {
-							setEventMessage($langs->trans('ErrorAtResultSet'), 'resultSetShipments');
+							setEventMessage($langs->trans('ErrorAtResultSet', 'resultSetShipments'), 'errors');
 							dol_syslog(__METHOD__.' $resql='.var_export($resql,true), LOG_ERR);
 						}
 						$object->orderFromSupplierOrder = $orderFromSupplierOrder;
@@ -86,7 +86,7 @@ class ActionsDispatch
 					dol_syslog(__METHOD__.' $resql='.var_export($resql,true), LOG_ERR);
 				}
 			} else {
-				setEventMessage($langs->trans('ErrorAtResultSet'), 'resultSetSupplierOrder');
+				setEventMessage($langs->trans('ErrorAtResultSet', 'resultSetSupplierOrder'), 'errors');
 				dol_syslog(__METHOD__.' $resultSetSupplierOrder='.var_export($resultSetSupplierOrder,true), LOG_ERR);
 			}
 		}

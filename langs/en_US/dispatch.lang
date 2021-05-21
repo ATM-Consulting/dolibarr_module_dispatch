@@ -99,3 +99,26 @@ DispatchSerialNumber=Serial number
 DispatchBatchNumber=Batch number
 DispatchDateReception=Date of incoming delivery
 DispatchMsgAssetGen=Equipment created / Ventilated products
+
+
+
+DISPATCH_ALLOW_DISPATCHING_EXISTING_ASSET = Allow dispatching the same asset several times
+ProductHasToBeSerialize = The product %s must be serialized
+ShipmentsList = List of unprocessed shipments
+SelectShipment = Shipment(s) requiring ventilations
+supplierOrderLinkedShipment = Shipment linked with the supplier order
+SelectExpe = Process this shipment
+NbItemCountInReception = Shipment details
+Warehouse = Warehouse
+Product = Product
+DeletedLine = Deleted line
+NoSerialNumber = No serial number: unable to create asset for %s. If you do not wish to serialize this product, please delete the serial number lines and use the standard reception process
+DLUO = Best Before Date
+IMEI = IMEI
+Firmware = Firmware
+TreatedExpe = Shipment processed
+ShipmentsTreatedList = List of processed shipments
+VentilatedExpeditions = Ventilated shipment(s)
+ResultSetEquipmentError = An error occurred with the SQL query for fetching assets
+ErrorAtResultSet = An error occurred in the %s query
+ErrorAtSaveObjectRecepDetail = Unable to save: SQL query error
