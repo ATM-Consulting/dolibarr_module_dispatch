@@ -262,17 +262,71 @@ class ActionsDispatch
 					if (count($TRecepDetail) > 0) {
 						$line->desc .= '<br>' . $outputlangs->trans('ProductsReceived') . ' :';
 
-						foreach ($TRecepDetail as $detail) {
-							$asset = new TAsset;
-							$asset->loadBy($PDOdb, $detail->serial_number, 'serial_number');
-							$asset->load_asset_type($PDOdb);
+						$TCompareDetails = array();
 
-							$this->_addAssetToLineDesc($line, $detail, $asset, $outputlangs);
+						foreach ($TRecepDetail as $detail) {
+							if(!empty($conf->global->DISPATCH_GROUP_DETAILS_ON_PDF)){
+								$newComparaison = $this->getArrayForPriceCompare($detail, $asset, $outputlangs);
+
+								$isGrouped = false;
+								if(!empty($TCompareDetails)){
+									foreach ($TCompareDetails as $compKey => $compareDetail){
+										$resComp = array_diff_assoc($newComparaison, $compareDetail->TCompare);
+										if (empty($resComp)) {
+											$isGrouped = true;
+											$TCompareDetails[$compKey]->total_weight_reel+=doubleval($detail->weight_reel);
+										}
+									}
+								}
+
+								if(!$isGrouped){
+									$compareDetail = new stdClass();
+									$compareDetail->total_weight_reel = doubleval($detail->weight_reel);
+									$compareDetail->TCompare = $newComparaison;
+									$TCompareDetails[] = $compareDetail;
+								}
+							}
+							else{
+								$asset = new TAsset;
+								$asset->loadBy($PDOdb, $detail->serial_number, 'serial_number');
+								$asset->load_asset_type($PDOdb);
+								$this->_addAssetToLineDesc($line, $detail, $asset, $outputlangs);
+							}
+						}
+
+						if(!empty($TCompareDetails)){
+							foreach ($TCompareDetails as $compareDetail){
+								$this->_addAssetGroupToLineDesc($line, $compareDetail, $outputlangs);
+							}
 						}
 					}
 				}
 			}
 		}
+	}
+
+	/**
+	 *
+	 *
+	 * @return array
+	 */
+	public function getArrayForAssetToLineDescCompare($detail, $asset, $outputlangs)
+	{
+
+		$unite = (($asset->assetType->measuring_units == 'unit') ? $outputlangs->trans('Assetunit_s') : measuring_units_string($detail->weight_reel_unit, $asset->assetType->measuring_units));
+
+
+		$forCompare = array(
+			'unite' => $unite,
+			'lot_number' => $asset->lot_number,
+			'serial_number' => $asset->serial_number
+		);
+
+		if (!empty($conf->global->ASSET_SHOW_DLUO) && empty($conf->global->DISPATCH_HIDE_DLUO_PDF) && !empty($asset->date_dluo)) {
+			$forCompare['DateDluo'] = $asset->get_date('dluo');
+		}
+
+		return $forCompare;
 	}
 
 	function _addAssetToLineDesc(&$line, $detail, $asset, Translate $outputlangs)
@@ -289,6 +343,26 @@ class ActionsDispatch
 
 		if (!empty($conf->global->ASSET_SHOW_DLUO) && empty($conf->global->DISPATCH_HIDE_DLUO_PDF) && !empty($asset->date_dluo)) {
 			$desc .= ' (' . $outputlangs->trans('EatByDate') . ' : ' . $asset->get_date('dluo') . ')';
+		}
+
+		$line->desc .= $desc;
+	}
+
+	function _addAssetGroupToLineDesc(&$line, $compareDetail, $outputlangs)
+	{
+		global $conf;
+		$unite = $compareDetail->TCompare['unite'];
+		$serial_number = $compareDetail->TCompare['serial_number'];
+		$lot_number = $compareDetail->TCompare['lot_number'];
+
+		if (empty($lot_number)) {
+			$desc = '<br>- ' . $outputlangs->trans('SerialNumberShort') . ' : ' . $serial_number;
+		} else {
+			$desc = "<br>- " . $lot_number . " x " . $compareDetail->total_weight_reel . " " . $unite;
+		}
+
+		if (!empty($conf->global->ASSET_SHOW_DLUO) && empty($conf->global->DISPATCH_HIDE_DLUO_PDF) && !empty($compareDetail->TCompare['DateDluo'])) {
+			$desc .= ' (' . $outputlangs->trans('EatByDate') . ' : ' . $compareDetail->TCompare['DateDluo'] . ')';
 		}
 
 		$line->desc .= $desc;
