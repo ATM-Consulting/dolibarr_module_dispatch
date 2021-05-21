@@ -265,12 +265,14 @@ class ActionsDispatch
 						$TCompareDetails = array();
 
 						foreach ($TRecepDetail as $detail) {
+							// Grouping with conf
 							if(!empty($conf->global->DISPATCH_GROUP_DETAILS_ON_PDF)){
 								$newComparaison = $this->getArrayForAssetToLineDescCompare($detail, $asset, $outputlangs);
 
 								$isGrouped = false;
 								if(!empty($TCompareDetails)){
 									foreach ($TCompareDetails as $compKey => $compareDetail){
+										//Comparing elements between them
 										$resComp = array_diff_assoc($newComparaison, $compareDetail->TCompare);
 										if (empty($resComp)) {
 											$isGrouped = true;
@@ -281,6 +283,7 @@ class ActionsDispatch
 								}
 
 								if(!$isGrouped){
+									//Creation of the first element
 									$compareDetail = new stdClass();
 									$compareDetail->total_weight_reel = doubleval($detail->weight_reel);
 									$compareDetail->TCompare = $newComparaison;
@@ -307,9 +310,10 @@ class ActionsDispatch
 	}
 
 	/**
-	 *
-	 *
-	 * @return array
+	 * @param $detail
+	 * @param $asset
+	 * @param $outputlangs
+	 * @return array containing unite, lot number and serial number
 	 */
 	public function getArrayForAssetToLineDescCompare($detail, $asset, $outputlangs)
 	{
