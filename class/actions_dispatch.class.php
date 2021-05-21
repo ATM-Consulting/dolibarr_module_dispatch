@@ -275,6 +275,7 @@ class ActionsDispatch
 										if (empty($resComp)) {
 											$isGrouped = true;
 											$TCompareDetails[$compKey]->total_weight_reel+=doubleval($detail->weight_reel);
+											break;
 										}
 									}
 								}
