@@ -319,11 +319,10 @@ class ActionsDispatch
 	 * @param $detail
 	 * @param $asset
 	 * @param $outputlangs
-	 * @return array containing unite and lot number
+	 * @return array containing unite and lot number if there is a lot, and unite, lot number and serial number if not
 	 */
 	public function getArrayForAssetToLineDescCompare($detail, $asset, $outputlangs)
 	{
-
 		$unite = (($asset->assetType->measuring_units == 'unit') ? $outputlangs->trans('Assetunit_s') : measuring_units_string($detail->weight_reel_unit, $asset->assetType->measuring_units));
 
 		if (!empty($asset->lot_number))
@@ -333,8 +332,7 @@ class ActionsDispatch
 				'lot_number' => $asset->lot_number
 			);
 		}
-		// Case without lot
-		else
+		else // Case without lot
 		{
 			$forCompare = array(
 				'unite' => $unite,
@@ -342,7 +340,6 @@ class ActionsDispatch
 				'serial_number' => $asset->serial_number
 			);
 		}
-
 
 		if (!empty($conf->global->ASSET_SHOW_DLUO) && empty($conf->global->DISPATCH_HIDE_DLUO_PDF) && !empty($asset->date_dluo)) {
 			$forCompare['DateDluo'] = $asset->get_date('dluo');
