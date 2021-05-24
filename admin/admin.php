@@ -103,7 +103,6 @@
 	print ajax_constantonoff("DISPATCH_CREATE_SUPPLIER_PRICE");
 	print '</td></tr>';
 
-
 	$var=!$var;
 	print '<tr '.$bc[$var].'>';
 	print '<td>'.$langs->trans("DISPATCH_USE_ONLY_UNIT_ASSET_RECEPTION").'</td>';
@@ -119,7 +118,6 @@
 	print '<td align="center" width="300">';
 	print ajax_constantonoff("DISPATCH_SHOW_UNIT_RECEPTION");
 	print '</td></tr>';
-
 
 	$var=!$var;
 	print '<tr '.$bc[$var].'>';
