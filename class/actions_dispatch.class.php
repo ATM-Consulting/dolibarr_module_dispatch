@@ -266,7 +266,7 @@ class ActionsDispatch
 
 						foreach ($TRecepDetail as $detail) {
 							// Grouping with conf
-//							if (!empty($conf->global->DISPATCH_GROUP_DETAILS_ON_PDF)) {
+							if (!empty($conf->global->DISPATCH_GROUP_DETAILS_ON_PDF)) {
 								if ($detail->fk_asset != 0)
 								{
 									$asset = new TAsset;
@@ -275,6 +275,7 @@ class ActionsDispatch
 								$newComparaison = $this->getArrayForAssetToLineDescCompare($detail, $asset, $outputlangs);
 
 								$isGrouped = false;
+								//This condition exists for the first case : key = 0
 								if (!empty($TCompareDetails)) {
 									foreach ($TCompareDetails as $compKey => $compareDetail) {
 										//Comparing elements between them
@@ -294,7 +295,7 @@ class ActionsDispatch
 									$compareDetail->TCompare = $newComparaison;
 									$TCompareDetails[] = $compareDetail;
 								}
-//							}
+							}
 							else {
 								$asset = new TAsset;
 								$asset->loadBy($PDOdb, $detail->serial_number, 'serial_number');
@@ -318,7 +319,7 @@ class ActionsDispatch
 	 * @param $detail
 	 * @param $asset
 	 * @param $outputlangs
-	 * @return array containing unite, lot number and serial number
+	 * @return array containing unite and lot number
 	 */
 	public function getArrayForAssetToLineDescCompare($detail, $asset, $outputlangs)
 	{
@@ -328,8 +329,7 @@ class ActionsDispatch
 
 		$forCompare = array(
 			'unite' => $unite,
-			'lot_number' => $asset->lot_number,
-			'serial_number' => $asset->serial_number
+			'lot_number' => $asset->lot_number
 		);
 
 		if (!empty($conf->global->ASSET_SHOW_DLUO) && empty($conf->global->DISPATCH_HIDE_DLUO_PDF) && !empty($asset->date_dluo)) {
@@ -339,6 +339,12 @@ class ActionsDispatch
 		return $forCompare;
 	}
 
+	/**
+	 * @param $line
+	 * @param $detail
+	 * @param $asset
+	 * @param Translate $outputlangs
+	 */
 	function _addAssetToLineDesc(&$line, $detail, $asset, Translate $outputlangs)
 	{
 		global $conf;
@@ -358,6 +364,11 @@ class ActionsDispatch
 		$line->desc .= $desc;
 	}
 
+	/**
+	 * @param $line
+	 * @param $compareDetail
+	 * @param $outputlangs
+	 */
 	function _addAssetGroupToLineDesc(&$line, $compareDetail, $outputlangs)
 	{
 		global $conf;
