@@ -278,7 +278,7 @@ class ActionsDispatch
 								//This condition exists for the first case : key = 0
 								if (!empty($TCompareDetails)) {
 									foreach ($TCompareDetails as $compKey => $compareDetail) {
-										//Comparing elements between them
+										//Comparing lot numbers between them
 										$resComp = array_diff_assoc($newComparaison, $compareDetail->TCompare);
 										if (empty($resComp)) {
 											$isGrouped = true;
@@ -326,11 +326,23 @@ class ActionsDispatch
 
 		$unite = (($asset->assetType->measuring_units == 'unit') ? $outputlangs->trans('Assetunit_s') : measuring_units_string($detail->weight_reel_unit, $asset->assetType->measuring_units));
 
+		if (!empty($asset->lot_number))
+		{
+			$forCompare = array(
+				'unite' => $unite,
+				'lot_number' => $asset->lot_number
+			);
+		}
+		// Case without lot
+		else
+		{
+			$forCompare = array(
+				'unite' => $unite,
+				'lot_number' => $asset->lot_number,
+				'serial_number' => $asset->serial_number
+			);
+		}
 
-		$forCompare = array(
-			'unite' => $unite,
-			'lot_number' => $asset->lot_number
-		);
 
 		if (!empty($conf->global->ASSET_SHOW_DLUO) && empty($conf->global->DISPATCH_HIDE_DLUO_PDF) && !empty($asset->date_dluo)) {
 			$forCompare['DateDluo'] = $asset->get_date('dluo');
