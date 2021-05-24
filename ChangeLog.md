@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- NEW T2966 Affiche une seule ligne par lot au lieu de plusieurs - *24/05/2021* - 3.4.2
 - NEW T2476 Ventilation produits/équipement multicompany OFSOM
 
 ### Changed
