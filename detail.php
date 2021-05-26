@@ -69,7 +69,7 @@
 
 				if ($numserie == -2){
 					$sql = 'SELECT rowid, serial_number FROM '.MAIN_DB_PREFIX.'assetatm';
-					$sql.= " WHERE lot_number LIKE '".$lot_number."'";
+					$sql.= " WHERE lot_number LIKE '".$db->escape($lot_number)."'";
 
 					$resql = $db->query($sql);
 					while($obj = $db->fetch_object($resql)) {
@@ -545,7 +545,7 @@ function printJSTabImportAddLine()
 					}
 				}).done(function(json_results) {
 
-					totalAssetsNumber = json_results.totalAssets;
+					totalAssetsNumber = json_results.DispatchTotalAssetsNumberInOF;
 
 					$('#numserie option').remove();
 					$('#numserie').append($('<option>', {
