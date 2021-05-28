@@ -266,8 +266,8 @@ class ActionsDispatch
 
 						foreach ($TRecepDetail as $detail) {
 							// Grouping with conf
-							if (!empty($conf->global->DISPATCH_GROUP_DETAILS_ON_PDF) && $detail->fk_asset != 0) {
-								
+							if (!empty($conf->global->DISPATCH_GROUP_DETAILS_ON_PDF) && intval($detail->fk_asset) > 0) {
+
 								$asset = new TAsset;
 								$asset->load($PDOdb, $detail->fk_asset);
 								$newComparaison = $this->getArrayForAssetToLineDescCompare($detail, $asset, $outputlangs);
