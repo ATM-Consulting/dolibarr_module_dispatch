@@ -64,17 +64,31 @@
 				break;
 
 			case 'save':
-				$numserie = GETPOST('numserie');
+				$numserie = GETPOST('numserie'); // Peut être un numéro de série ou bien la valeur -2 du select (Ajouter automatiquement)
+				$lot_number = GETPOST('lot_number');
 
-				$asset = new TAsset;
-				if ($asset->loadBy($PDOdb, $numserie, 'serial_number')) {
+				if ($numserie == -2){
+					$sql = 'SELECT rowid, serial_number FROM '.MAIN_DB_PREFIX.'assetatm';
+					$sql.= " WHERE lot_number LIKE '".$db->escape($lot_number)."'";
 
-					_addExpeditiondetLine($PDOdb, $TImport, $expedition, $numserie);
-
-					setEventMessage('Numéro de série enregistré');
-				} else {
-					setEventMessage('Aucun équipement pour ce numéro de série', 'errors');
+					$resql = $db->query($sql);
+					while($obj = $db->fetch_object($resql)) {
+						_addExpeditiondetLine($PDOdb, $TImport, $expedition, $obj->serial_number);
+					}
+					setEventMessage($langs->trans('AllSerialNumbersAdded'));
 				}
+				else {
+					$asset = new TAsset;
+					if ($asset->loadBy($PDOdb, $numserie, 'serial_number')) {
+
+						_addExpeditiondetLine($PDOdb, $TImport, $expedition, $numserie);
+
+						setEventMessage('Numéro de série enregistré');
+					} else {
+						setEventMessage('Aucun équipement pour ce numéro de série', 'errors');
+					}
+				}
+
 
 				header('location:'.$_SERVER['PHP_SELF'].'?id='.$id);
                 		exit;
@@ -531,13 +545,22 @@ function printJSTabImportAddLine()
 					}
 				}).done(function(json_results) {
 
+					totalAssetsNumber = json_results.DispatchTotalAssetsNumberInOF;
+
 					$('#numserie option').remove();
 					$('#numserie').append($('<option>', {
 						value: '',
 						text: '-- Selectionnez un équipement --',
 						selected: true
 					}));
+					$('#numserie').append($('<option>', {
+						// Get all the serials linked to the OF
+						value: -2, // + Object.keys(json_results).map(k => json_results[k].serial_number).join(',')
+						text: '-- Ajouter automatiquement --',
+						selected: false
+					}));
 					cpt = 0;
+
 					$.each(json_results, function(index) {
 						var obj = json_results[index];
 						cpt ++;
@@ -565,6 +588,28 @@ function printJSTabImportAddLine()
 								$('#quantity').after('<span id="units_label"> unité(s)</span>');
 							}
 						}
+
+						$('#numserie').change(function() {
+							var numserie = $(this).val();
+
+							if(numserie && numserie == -2) {
+								$('#quantity').hide(); // Only hide visual information but keep real value (only one unit for one asset)
+								$('#units_label').text('Total : ' + totalAssetsNumber + ' num. série'); // Show only visual information of assets total number in the OF
+								$('#newline_quantity').css({ visibility: 'visible' });
+							}
+							else {
+								if(numserie && numserie.length > 0)
+								{
+									$('#quantity').show();
+									$('#units_label').text(obj.unite);
+									$('#newline_quantity').css({ visibility: 'visible' });
+								}
+								else
+								{
+									$('#newline_quantity').css({ visibility: 'hidden' });
+								}
+							}
+						});
 					});
 
 					if((elem.is('input') && $('#lineexpeditionid').val().length > 0) || (lot_number && lot_number.length > 0))
@@ -576,20 +621,6 @@ function printJSTabImportAddLine()
 						$('#newline_numserie').css({ visibility: 'hidden' });
 					}
 				});
-			});
-
-			$('#numserie').change(function()
-			{
-				var numserie = $(this).val();
-
-				if(numserie && numserie.length > 0)
-				{
-					$('#newline_quantity').css({ visibility: 'visible' });
-				}
-				else
-				{
-					$('#newline_quantity').css({ visibility: 'hidden' });
-				}
 			});
 
 			$('#lineexpeditionid').change(function() {
