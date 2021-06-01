@@ -68,14 +68,24 @@
 				$lot_number = GETPOST('lot_number');
 
 				if ($numserie == -2){
-					$sql = 'SELECT rowid, serial_number FROM '.MAIN_DB_PREFIX.'assetatm';
-					$sql.= " WHERE lot_number LIKE '".$db->escape($lot_number)."'";
+					$sql = 'SELECT a.rowid, serial_number FROM '.MAIN_DB_PREFIX.'assetatm a';
+					$sql.= " WHERE a.lot_number LIKE '".$db->escape($lot_number)."'";
+
+					//Si l'équipement est attribué à une autre expédition qui a le statut brouillon ou validé, on ne le propose pas
+					if($expedition->statut == Expedition::STATUS_DRAFT || $expedition->statut == Expedition::STATUS_VALIDATED ) {
+						$sql.= " AND a.rowid NOT IN (SELECT eda2.fk_asset FROM ".MAIN_DB_PREFIX."expeditiondet_asset eda2
+								LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet as ed2 ON (ed2.rowid = eda2.fk_expeditiondet)
+								LEFT JOIN ".MAIN_DB_PREFIX."expedition as e2 ON (e2.rowid = ed2.fk_expedition) WHERE e2.fk_statut < 2)";
+					}
 
 					$resql = $db->query($sql);
-					while($obj = $db->fetch_object($resql)) {
-						_addExpeditiondetLine($PDOdb, $TImport, $expedition, $obj->serial_number);
+					if (! empty($resql->num_rows)) {
+						while($obj = $db->fetch_object($resql)) {
+							_addExpeditiondetLine($PDOdb, $TImport, $expedition, $obj->serial_number);
+						}
+						setEventMessage($langs->trans('AllSerialNumbersAdded'));
 					}
-					setEventMessage($langs->trans('AllSerialNumbersAdded'));
+					else setEventMessage($langs->trans('NoMoreAssetAvailable'), 'errors');
 				}
 				else {
 					$asset = new TAsset;
@@ -592,22 +602,15 @@ function printJSTabImportAddLine()
 						$('#numserie').change(function() {
 							var numserie = $(this).val();
 
-							if(numserie && numserie == -2) {
-								$('#quantity').hide(); // Only hide visual information but keep real value (only one unit for one asset)
-								$('#units_label').text('Total : ' + totalAssetsNumber + ' num. série'); // Show only visual information of assets total number in the OF
+							if(numserie && numserie.length > 0)
+							{
+								$('#quantity').show();
+								$('#units_label').text(obj.unite);
 								$('#newline_quantity').css({ visibility: 'visible' });
 							}
-							else {
-								if(numserie && numserie.length > 0)
-								{
-									$('#quantity').show();
-									$('#units_label').text(obj.unite);
-									$('#newline_quantity').css({ visibility: 'visible' });
-								}
-								else
-								{
-									$('#newline_quantity').css({ visibility: 'hidden' });
-								}
+							else
+							{
+								$('#newline_quantity').css({ visibility: 'hidden' });
 							}
 						});
 					});
