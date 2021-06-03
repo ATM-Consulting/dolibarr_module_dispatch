@@ -20,7 +20,7 @@
 	$expedition->fetch($id);
 	
 	$action = GETPOST('action');
-	$TImport = _loadDetail($PDOdb, $expedition);
+	if(!isset($_POST['btaddasset'])) $TImport = _loadDetail($PDOdb, $expedition); // En cas d'ajout de ligne le chargement est fait plus bas
 	
 	function _loadDetail(&$PDOdb,&$expedition){
 		
@@ -147,7 +147,7 @@
 		if($asset->loadBy($PDOdb, $numserie, 'serial_number')){
 				
 			_addExpeditiondetLine($PDOdb,$TImport,$expedition,$numserie);
-
+			$TImport = _loadDetail($PDOdb, $expedition);
 			setEventMessage('Numéro de série enregistré');
 		}
 		else{
