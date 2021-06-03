@@ -170,6 +170,19 @@ global $langs, $db;
 	
 	enteteexpedition($expedition);
 	
+	// Récupération des produits présents dans l'expedition :
+	$TProduct = array();
+	$sql = "SELECT DISTINCT(ed.rowid),p.rowid as fk_product,p.ref,p.label ,ed.qty
+		FROM ".MAIN_DB_PREFIX."product as p
+		LEFT JOIN ".MAIN_DB_PREFIX."commandedet as cd ON (cd.fk_product = p.rowid)
+		LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet as ed ON (ed.fk_origin_line = cd.rowid)
+		WHERE ed.fk_expedition = ".$expedition->id."";
+
+	$PDOdb->Execute($sql);
+	while ($obj = $PDOdb->Get_line()) {
+		$TProduct[$PDOdb->Get_field('rowid')] = $obj;
+	}
+
 	echo '<br>';
 	
 	if($expedition->statut == 0){
@@ -192,13 +205,13 @@ global $langs, $db;
 
 				$('#lot_number').change(function() {
 					var lot_number = $(this).val();
-
+					var pid = $('#lineexpeditionid').find(':selected').attr('fk-product');
 					$.ajax({
 						url: 'script/interface.php',
 						method: 'GET',
 						data: {
 							lot_number: lot_number,
-							productid: $('#lineexpeditionid').find(':selected').attr('fk-product'),
+							productid: pid,
 							type:'get',
 							get:'autocomplete_asset'
 						}
@@ -207,6 +220,8 @@ global $langs, $db;
 
 						$('#numserie option').remove();
 						cpt = 0;
+
+						var TQtyProductExped = {<?php foreach($TProduct as $obj) {print $obj->fk_product.':'.$obj->qty.',';} ?>};
 						$.each(json_results, function(index) {
 							var obj = json_results[index];
 							cpt ++;
@@ -215,7 +230,7 @@ global $langs, $db;
 								text: obj.serial_number + ' - ' + obj.qty + ' ' +obj.unite_string
 							}));
 
-							$('#quantity').val(obj.qty);
+							$('#quantity').val(Math.min(obj.qty, TQtyProductExped[pid]));
 							if(obj.unite != 'unité(s)'){
 								$('#quantity_unit').show();
 								$('#units_lable').remove();
@@ -306,19 +321,9 @@ global $langs, $db;
 
 		echo 'Produit expédié<select id="lineexpeditionid" name="lineexpeditionid"><option value=""></option>';
 		
-		$TProduct = array('');
-		$sql = "SELECT DISTINCT(ed.rowid),p.rowid as fk_product,p.ref,p.label ,ed.qty
-				FROM ".MAIN_DB_PREFIX."product as p
-					LEFT JOIN ".MAIN_DB_PREFIX."commandedet as cd ON (cd.fk_product = p.rowid)
-					LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet as ed ON (ed.fk_origin_line = cd.rowid)
-				WHERE ed.fk_expedition = ".$expedition->id."";
-		
 		$PDOdb->Execute($sql);
-		while ($obj = $PDOdb->Get_line()) {
-			//$TProduct[$PDOdb->Get_field('rowid')] = $PDOdb->Get_field('ref').' - '.$PDOdb->Get_field('label');
-			
+		foreach ($TProduct as &$obj) {
  			echo '<option value="'.$obj->rowid.'" fk-product="'.$obj->fk_product.'">'.$obj->ref.' - '.$obj->label.' x '.$obj->qty.'</option>';
-			
 		}
 		
 		
