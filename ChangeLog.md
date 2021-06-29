@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- FIX : auto-fill of expedition's tab is made with ordered qty and not with the whole lot *29/06/2021* - 3.5.2
 - FIX: Add error message if no more available assets for this expedition *31/05/2021* - 3.5.1
 - NEW: automatically add all the assets contained in OF with the Add automatically select option *20/05/2021* - 3.5.0
 - FIX: missing en_US translations *22/04/2021* - 3.4.1
