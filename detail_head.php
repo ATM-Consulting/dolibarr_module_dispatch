@@ -46,15 +46,20 @@ $product_static = new Product($db);
 
 if ($action == 'setdate_livraison' && $user->rights->expedition->creer)
 {
-    //print "x ".$_POST['liv_month'].", ".$_POST['liv_day'].", ".$_POST['liv_year'];
-    $datedelivery=dol_mktime(GETPOST('liv_hour','int'), GETPOST('liv_min','int'), 0, GETPOST('liv_month','int'), GETPOST('liv_day','int'), GETPOST('liv_year','int'));
+	//print "x ".$_POST['liv_month'].", ".$_POST['liv_day'].", ".$_POST['liv_year'];
+	$datedelivery=dol_mktime(GETPOST('liv_hour','int'), GETPOST('liv_min','int'), 0, GETPOST('liv_month','int'), GETPOST('liv_day','int'), GETPOST('liv_year','int'));
 
-    $object->fetch($id);
-    $result=$object->set_date_livraison($user,$datedelivery);
-    if ($result < 0)
-    {
-        $mesg='<div class="error">'.$object->error.'</div>';
-    }
+	$object->fetch($id);
+
+	if (version_compare(DOL_VERSION, '14', '>=')) {
+		$result = $object->setDateLivraison($user, $datedelivery);
+	} else {
+		$result = $object->set_date_livraison($user, $datedelivery);
+	}
+	if ($result < 0)
+	{
+		$mesg='<div class="error">'.$object->error.'</div>';
+	}
 }
 
 // Action update description of emailing
@@ -218,7 +223,7 @@ if (! empty($id) || ! empty($ref))
         print '<table class="nobordernopadding" width="100%"><tr><td>';
         print $langs->trans('DateDeliveryPlanned');
         print '</td>';
-		
+
         print '</tr></table>';
         print '</td><td colspan="2">';
 		print $object->date_delivery ? dol_print_date($object->date_delivery,'dayhourtext') : '&nbsp;';
@@ -319,7 +324,7 @@ if (! empty($id) || ! empty($ref))
         $reshook=$hookmanager->executeHooks('formObjectOptions',$parameters,$object,$action);    // Note that $action and $object may have been modified by hook
 
         print "</table>\n";
-		
+
 
     }
 }
