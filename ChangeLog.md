@@ -2,12 +2,12 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-- FIX: v13 compatibility *11/05/2021* - 3.4.3
 
 ## Version 3.4 [2020-12-10]
 
 ### Added
 
+- FIX: v13 + v14 compatibility *29/06/2021* - 3.4.3
 - FIX: missing en_US translations *22/04/2021* - 3.4.1
 - NEW T2966 Affiche une seule ligne par lot au lieu de plusieurs - *24/05/2021* - 3.4.2
 - NEW T2476 Ventilation produits/équipement multicompany OFSOM
