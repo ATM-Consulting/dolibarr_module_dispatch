@@ -1593,9 +1593,9 @@ function is_supplier_linked($entityId,$socid){
 	global $db;
 
 	$sql = "SELECT DISTINCT te.rowid FROM " . MAIN_DB_PREFIX . "societe AS s ";
-	$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "thirdparty_entity AS te ON s.rowid = te.fk_soc ";
-	$sql .= " WHERE te.entity=" . $entityId;
-	$sql .= " AND te.fk_soc =" . $socid;
+	$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "entity_thirdparty AS et ON s.rowid = et.fk_soc ";
+	$sql .= " WHERE et.entity=" . $entityId;
+	$sql .= " AND et.fk_soc =" . $socid;
 
 	$res = $db->query($sql);
 	if($res){
