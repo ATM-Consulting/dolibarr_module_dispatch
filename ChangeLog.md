@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-- FIX: v13 compatibility *11/05/2021* - 3.4.2
+- FIX: v13 compatibility *11/05/2021* - 3.4.3
 
 ## Version 3.4 [2020-12-10]
 
