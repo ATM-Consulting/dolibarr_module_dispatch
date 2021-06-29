@@ -29,7 +29,7 @@
 	$parameters = array();
 	$reshook = $hookmanager->executeHooks('doActions', $parameters, $TImport, $action);
 	if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
-
+//var_dump($expedition);
 	if(empty($reshook))
 	{
 		switch ($action)
@@ -80,8 +80,12 @@
 
 					$resql = $db->query($sql);
 					if (! empty($resql->num_rows)) {
-						while($obj = $db->fetch_object($resql)) {
-							_addExpeditiondetLine($PDOdb, $TImport, $expedition, $obj->serial_number);
+						foreach($expedition->lines as $line){
+							$orderedQty = $line->qty_shipped;
+							while($obj = $db->fetch_object($resql) && !empty($orderedQty)) {
+								_addExpeditiondetLine($PDOdb, $TImport, $expedition, $obj->serial_number);
+								$orderedQty --;
+							}
 						}
 						setEventMessage($langs->trans('AllSerialNumbersAdded'));
 					}
