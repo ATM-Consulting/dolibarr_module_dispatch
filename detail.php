@@ -29,7 +29,6 @@
 	$parameters = array();
 	$reshook = $hookmanager->executeHooks('doActions', $parameters, $TImport, $action);
 	if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
-//var_dump($expedition);
 	if(empty($reshook))
 	{
 		switch ($action)
@@ -67,7 +66,9 @@
 				$numserie = GETPOST('numserie'); // Peut être un numéro de série ou bien la valeur -2 du select (Ajouter automatiquement)
 				$lot_number = GETPOST('lot_number');
 				$line = new ExpeditionLigne($db);
-				$line->fetch(GETPOST('lineexpeditionid', 'int'));
+				if ($line->fetch(GETPOST('lineexpeditionid', 'int')) <= 0) {
+					// gérer l’erreur (?)
+				}
 
 				if ($numserie == -2){
 					$sql = 'SELECT a.rowid, serial_number FROM '.MAIN_DB_PREFIX.'assetatm a';
@@ -77,7 +78,7 @@
 					if($expedition->statut == Expedition::STATUS_DRAFT || $expedition->statut == Expedition::STATUS_VALIDATED ) {
 						$sql.= " AND a.rowid NOT IN (SELECT eda2.fk_asset FROM ".MAIN_DB_PREFIX."expeditiondet_asset eda2
 								LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet as ed2 ON (ed2.rowid = eda2.fk_expeditiondet)
-								LEFT JOIN ".MAIN_DB_PREFIX."expedition as e2 ON (e2.rowid = ed2.fk_expedition) WHERE e2.fk_statut < 2 ) limit $line->qty";
+								LEFT JOIN ".MAIN_DB_PREFIX."expedition as e2 ON (e2.rowid = ed2.fk_expedition) WHERE e2.fk_statut < 2) LIMIT " . $line->qty;
 					}
 
 					$resql = $db->query($sql);
