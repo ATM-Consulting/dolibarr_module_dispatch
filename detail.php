@@ -66,8 +66,11 @@
 				$numserie = GETPOST('numserie'); // Peut être un numéro de série ou bien la valeur -2 du select (Ajouter automatiquement)
 				$lot_number = GETPOST('lot_number');
 				$line = new ExpeditionLigne($db);
-				if ($line->fetch(GETPOST('lineexpeditionid', 'int')) <= 0) {
-					// gérer l’erreur (?)
+				$lineId = GETPOST('lineexpeditionid', 'int');
+				$line->fetch($lineId);
+				if ($line->id === null) {
+					setEventMessage($langs->trans("ErrorUnableToFetchLine", $lineId),"errors");
+					break;
 				}
 
 				if ($numserie == -2){
@@ -83,10 +86,9 @@
 
 					$resql = $db->query($sql);
 					if (! empty($resql->num_rows)) {
-							while($obj = $db->fetch_object($resql)) {
-								_addExpeditiondetLine($PDOdb, $TImport, $expedition, $obj->serial_number);
-								$orderedQty --;
-							}
+						while($obj = $db->fetch_object($resql)) {
+							_addExpeditiondetLine($PDOdb, $TImport, $expedition, $obj->serial_number);
+						}
 
 						setEventMessage($langs->trans('AllSerialNumbersAdded'));
 					}
