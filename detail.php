@@ -77,7 +77,7 @@
 					if($expedition->statut == Expedition::STATUS_DRAFT || $expedition->statut == Expedition::STATUS_VALIDATED ) {
 						$sql.= " AND a.rowid NOT IN (SELECT eda2.fk_asset FROM ".MAIN_DB_PREFIX."expeditiondet_asset eda2
 								LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet as ed2 ON (ed2.rowid = eda2.fk_expeditiondet)
-								LEFT JOIN ".MAIN_DB_PREFIX."expedition as e2 ON (e2.rowid = ed2.fk_expedition) WHERE e2.fk_statut < 2 ) limit $line->qty";
+								LEFT JOIN ".MAIN_DB_PREFIX."expedition as e2 ON (e2.rowid = ed2.fk_expedition) WHERE e2.fk_statut < 2) LIMIT " . $line->qty;
 					}
 
 					$resql = $db->query($sql);
