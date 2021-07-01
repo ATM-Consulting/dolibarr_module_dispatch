@@ -29,7 +29,6 @@
 	$parameters = array();
 	$reshook = $hookmanager->executeHooks('doActions', $parameters, $TImport, $action);
 	if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
-//var_dump($expedition);
 	if(empty($reshook))
 	{
 		switch ($action)
