@@ -67,7 +67,9 @@
 				$numserie = GETPOST('numserie'); // Peut être un numéro de série ou bien la valeur -2 du select (Ajouter automatiquement)
 				$lot_number = GETPOST('lot_number');
 				$line = new ExpeditionLigne($db);
-				$line->fetch(GETPOST('lineexpeditionid', 'int'));
+				if ($line->fetch(GETPOST('lineexpeditionid', 'int')) <= 0) {
+					// gérer l’erreur (?)
+				}
 
 				if ($numserie == -2){
 					$sql = 'SELECT a.rowid, serial_number FROM '.MAIN_DB_PREFIX.'assetatm a';
