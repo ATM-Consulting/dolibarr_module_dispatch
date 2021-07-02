@@ -3,11 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-
-## Version 3.4.0 [2020-12-10]
+## Version 3.4 [2020-12-10]
 
 ### Added
 
+- FIX: v13 + v14 compatibility *29/06/2021* - 3.4.3
+- FIX: missing en_US translations *22/04/2021* - 3.4.1
 - NEW T2966 Affiche une seule ligne par lot au lieu de plusieurs - *24/05/2021* - 3.4.2
 - NEW T2476 Ventilation produits/équipement multicompany OFSOM
 
@@ -18,7 +19,7 @@ All notable changes to this project will be documented in this file.
 - FIX : Manque filtre sur entrepots (getentities) sur écran réception standard
 - FIX : Manque filtre entité sur liste des équipements
 
-## Version 3.3.0 [2020-10-21]
+## Version 3.3 [2020-10-21]
 
 ### Added
 
