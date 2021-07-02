@@ -1,4 +1,11 @@
 <?php
+
+//TODO: *2021-07-02* le fichier `detail_head.php` semble totalement inutilisé.
+//      Si le fichier n'a pas changé d'ici février 2022, on pourra le dégager.
+
+die('ERREUR: si vous recevez ce message, contactez le service client d’ATM Consulting en précisant'
+	.' l’adresse complète de la page et en copiant ce message d’erreur.');
+
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT.'/expedition/class/expedition.class.php';
 require_once DOL_DOCUMENT_ROOT.'/product/class/html.formproduct.class.php';
@@ -46,15 +53,21 @@ $product_static = new Product($db);
 
 if ($action == 'setdate_livraison' && $user->rights->expedition->creer)
 {
-    //print "x ".$_POST['liv_month'].", ".$_POST['liv_day'].", ".$_POST['liv_year'];
-    $datedelivery=dol_mktime(GETPOST('liv_hour','int'), GETPOST('liv_min','int'), 0, GETPOST('liv_month','int'), GETPOST('liv_day','int'), GETPOST('liv_year','int'));
+	//print "x ".$_POST['liv_month'].", ".$_POST['liv_day'].", ".$_POST['liv_year'];
+	$datedelivery=dol_mktime(GETPOST('liv_hour','int'), GETPOST('liv_min','int'), 0, GETPOST('liv_month','int'), GETPOST('liv_day','int'), GETPOST('liv_year','int'));
 
-    $object->fetch($id);
-    $result=$object->set_date_livraison($user,$datedelivery);
-    if ($result < 0)
-    {
-        $mesg='<div class="error">'.$object->error.'</div>';
-    }
+	$object->fetch($id);
+
+	if (!is_callable(array($object, 'setDateLivraison'))) {
+		// For Dolibarr < 14 retrocompatibility
+		$result = $object->set_date_livraison($user, $datedelivery);
+	} else {
+		$result = $object->setDateLivraison($user, $datedelivery);
+	}
+	if ($result < 0)
+	{
+		$mesg='<div class="error">'.$object->error.'</div>';
+	}
 }
 
 // Action update description of emailing
@@ -218,7 +231,7 @@ if (! empty($id) || ! empty($ref))
         print '<table class="nobordernopadding" width="100%"><tr><td>';
         print $langs->trans('DateDeliveryPlanned');
         print '</td>';
-		
+
         print '</tr></table>';
         print '</td><td colspan="2">';
 		print $object->date_delivery ? dol_print_date($object->date_delivery,'dayhourtext') : '&nbsp;';
@@ -319,7 +332,7 @@ if (! empty($id) || ! empty($ref))
         $reshook=$hookmanager->executeHooks('formObjectOptions',$parameters,$object,$action);    // Note that $action and $object may have been modified by hook
 
         print "</table>\n";
-		
+
 
     }
 }
