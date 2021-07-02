@@ -4,7 +4,7 @@
 //      Si le fichier n'a pas changé d'ici février 2022, on pourra le dégager.
 
 die('ERREUR: si vous recevez ce message, contactez le service client d’ATM Consulting en précisant'
-	.' l’adresse complète de la page et en copiant ce message d’erreur.');
+	.' l’adresse complète de la page et en copiant ce code d’erreur : JUH737FFEF5.');
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT.'/expedition/class/expedition.class.php';
