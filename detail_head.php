@@ -1,4 +1,11 @@
 <?php
+
+//TODO: *2021-07-02* le fichier `detail_head.php` semble totalement inutilisé.
+//      Si le fichier n'a pas changé d'ici février 2022, on pourra le dégager.
+
+die('ERREUR: si vous recevez ce message, contactez le service client d’ATM Consulting en précisant'
+	.' l’adresse complète de la page et en copiant ce message d’erreur.');
+
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT.'/expedition/class/expedition.class.php';
 require_once DOL_DOCUMENT_ROOT.'/product/class/html.formproduct.class.php';
@@ -51,10 +58,11 @@ if ($action == 'setdate_livraison' && $user->rights->expedition->creer)
 
 	$object->fetch($id);
 
-	if (version_compare(DOL_VERSION, '14', '>=')) {
-		$result = $object->setDateLivraison($user, $datedelivery);
-	} else {
+	if (!is_callable(array($object, 'setDateLivraison'))) {
+		// For Dolibarr < 14 retrocompatibility
 		$result = $object->set_date_livraison($user, $datedelivery);
+	} else {
+		$result = $object->setDateLivraison($user, $datedelivery);
 	}
 	if ($result < 0)
 	{
