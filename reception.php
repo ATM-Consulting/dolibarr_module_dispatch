@@ -1075,7 +1075,6 @@ function _list_already_dispatched(&$commande) {
 				print '<td></td>';
 				print '<td>'.$langs->trans("Warehouse").'</td>';
 				print '<td>'.$langs->trans("Comment").'</td>';
-				if (! empty($conf->global->SUPPLIER_ORDER_USE_DISPATCH_STATUS) && (float) DOL_VERSION > 3.7) print '<td align="center" colspan="2">'.$langs->trans("Status").'</td>';
 				print "</tr>\n";
 
 				$var=false;
@@ -1111,55 +1110,6 @@ function _list_already_dispatched(&$commande) {
 
 					// Comment
 					print '<td>'.dol_trunc($objp->comment).'</td>';
-
-					// Status
-					if (! empty($conf->global->SUPPLIER_ORDER_USE_DISPATCH_STATUS) && (float) DOL_VERSION > 3.7)
-					{
-						print '<td align="right">';
-						$supplierorderdispatch->status = (empty($objp->status)?0:$objp->status);
-						//print $supplierorderdispatch->status;
-						print $supplierorderdispatch->getLibStatut(5);
-						print '</td>';
-
-						// Add button to check/uncheck disaptching
-						print '<td align="center">';
-						if ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && empty($user->rights->fournisseur->commande->receptionner))
-       					|| (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && empty($user->rights->fournisseur->commande_advance->check))
-							)
-						{
-							if (empty($objp->status))
-							{
-								print '<a class="button buttonRefused" href="#">'.$langs->trans("Approve").'</a>';
-								print '<a class="button buttonRefused" href="#">'.$langs->trans("Deny").'</a>';
-							}
-							else
-							{
-								print '<a class="button buttonRefused" href="#">'.$langs->trans("Disapprove").'</a>';
-								print '<a class="button buttonRefused" href="#">'.$langs->trans("Deny").'</a>';
-							}
-						}
-						else
-						{
-							$disabled='';
-							if ($commande->statut == 5) $disabled=1;
-							if (empty($objp->status))
-							{
-								print '<a class="button'.($disabled?' buttonRefused':'').'" href="'.$_SERVER["PHP_SELF"]."?id=".$id."&action=checkdispatchline&lineid=".$objp->dispatchlineid.'">'.$langs->trans("Approve").'</a>';
-								print '<a class="button'.($disabled?' buttonRefused':'').'" href="'.$_SERVER["PHP_SELF"]."?id=".$id."&action=denydispatchline&lineid=".$objp->dispatchlineid.'">'.$langs->trans("Deny").'</a>';
-							}
-							if ($objp->status == 1)
-							{
-								print '<a class="button'.($disabled?' buttonRefused':'').'" href="'.$_SERVER["PHP_SELF"]."?id=".$id."&action=uncheckdispatchline&lineid=".$objp->dispatchlineid.'">'.$langs->trans("Reinit").'</a>';
-								print '<a class="button'.($disabled?' buttonRefused':'').'" href="'.$_SERVER["PHP_SELF"]."?id=".$id."&action=denydispatchline&lineid=".$objp->dispatchlineid.'">'.$langs->trans("Deny").'</a>';
-							}
-							if ($objp->status == 2)
-							{
-								print '<a class="button'.($disabled?' buttonRefused':'').'" href="'.$_SERVER["PHP_SELF"]."?id=".$id."&action=uncheckdispatchline&lineid=".$objp->dispatchlineid.'">'.$langs->trans("Reinit").'</a>';
-								print '<a class="button'.($disabled?' buttonRefused':'').'" href="'.$_SERVER["PHP_SELF"]."?id=".$id."&action=checkdispatchline&lineid=".$objp->dispatchlineid.'">'.$langs->trans("Approve").'</a>';
-							}
-						}
-						print '</td>';
-					}
 
 					print "</tr>\n";
 
