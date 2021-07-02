@@ -43,6 +43,8 @@ require('../config.php');
 $myparam = isset($_GET["myparam"])?$_GET["myparam"]:'';
 
 // Protection if external user
+if (empty($user->socid) && !empty($user->societe_id)) { $user->socid = $user->societe_id; } // for Dolibarr < v13 compatibility 
+
 if ($user->socid > 0)
 {
 	//accessforbidden();

@@ -51,10 +51,11 @@ if ($action == 'setdate_livraison' && $user->rights->expedition->creer)
 
 	$object->fetch($id);
 
-	if (version_compare(DOL_VERSION, '14', '>=')) {
-		$result = $object->setDateLivraison($user, $datedelivery);
-	} else {
+	if (!is_callable(array($object, 'setDateLivraison'))) {
+		// For Dolibarr < 14 retrocompatibility
 		$result = $object->set_date_livraison($user, $datedelivery);
+	} else {
+		$result = $object->setDateLivraison($user, $datedelivery);
 	}
 	if ($result < 0)
 	{
