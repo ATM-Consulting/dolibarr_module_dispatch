@@ -296,7 +296,7 @@ class ActionsDispatch
 							}
 							else {
 								$asset = new TAsset;
-								$asset->loadBy($PDOdb, $detail->serial_number, 'serial_number');
+								$asset->loadBy($PDOdb, $detail->lot_number, 'lot_number');
 								$asset->load_asset_type($PDOdb);
 								$this->_addAssetToLineDesc($line, $detail, $asset, $outputlangs);
 							}

@@ -126,4 +126,5 @@ ShipmentsTreatedList = Liste des expéditions traitées
 VentilatedExpeditions = Expédition(s) ventilées
 ResultSetEquipmentError = Une erreur est survenue dans la requête des équipements
 ErrorAtResultSet = Une erreur est survenue dans la requête de %s
+ErrorUnableToFetchLine=Impossible de récupérer la ligne %d
 ErrorAtSaveObjectRecepDetail = Une erreur est survenue lors de l'enregistrement en base de données
