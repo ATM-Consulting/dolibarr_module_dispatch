@@ -3,10 +3,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+
+## Version 3.5 - 2021-07-06
+
 - FIX: Add error message if no more available assets for this expedition *31/05/2021* - 3.5.1
 - NEW: automatically add all the assets contained in OF with the Add automatically select option *20/05/2021* - 3.5.0
 
-## Version 3.4 [2020-12-10]
+## Version 3.4 - 2020-12-10
 
 ### Added
 
@@ -22,7 +25,7 @@ All notable changes to this project will be documented in this file.
 - FIX : Manque filtre sur entrepots (getentities) sur écran réception standard
 - FIX : Manque filtre entité sur liste des équipements
 
-## Version 3.3 [2020-10-21]
+## Version 3.3 - 2020-10-21
 
 ### Added
 
