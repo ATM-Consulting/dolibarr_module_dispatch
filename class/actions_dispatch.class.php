@@ -289,7 +289,7 @@ class ActionsDispatch
 								if (!$isGrouped) {
 									//Creation of the first element
 									$compareDetail = new stdClass();
-									$compareDetail->total_weight_reel = doubleval($detail->weight_reel);
+									$compareDetail->total_weight_reel = doubleval($line->qty);
 									$compareDetail->TCompare = $newComparaison;
 									$TCompareDetails[] = $compareDetail;
 								}
