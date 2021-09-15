@@ -444,7 +444,10 @@ function tabImportAddLine(&$PDOdb, &$expedition, $form, $fullColspan)
 							echo $DoliFormProduct->load_measuring_units('quantity_unit" id="quantity_unit', 'weight');
 						}
 						else{
-							echo $DoliFormProduct->selectMeasuringUnits('quantity_unit" id="quantity_unit', 'weight');
+							if(intval(DOL_VERSION) >= 14) {
+								echo $DoliFormProduct->selectMeasuringUnits('quantity_unit', 'weight');
+							}
+							else echo $DoliFormProduct->selectMeasuringUnits('quantity_unit" id="quantity_unit', 'weight');
 						}
 						?>
                     </td>
