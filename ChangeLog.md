@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ## Version 3.5 - 2021-07-06
 
+- FIX: v14 compatibility - NOSCRFCHECK and selectMeasuringUnits - 3.5.5 - *15/09/2021*
 - FIX: v14 compatibility - setDateLivraison -> setDeliveryDate - 3.5.4 - *27/07/2021*
 - FIX : display quantity of shipped products on PDF *12/07/2021* - 3.5.3
 - FIX : auto-fill of expedition's tab is made with ordered qty and not with the whole lot *29/06/2021* - 3.5.2
