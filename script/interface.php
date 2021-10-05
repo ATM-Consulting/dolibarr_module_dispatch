@@ -180,7 +180,7 @@ function _autocomplete_lot_number(&$PDOdb, $productid) {
 
 	$sql = "SELECT DISTINCT(lot_number),rowid, SUM(contenancereel_value) as qty, contenancereel_units as unit
 			FROM ".MAIN_DB_PREFIX.ATM_ASSET_NAME."
-			WHERE fk_product = ".$productid." GROUP BY lot_number,contenancereel_units,rowid";
+			WHERE fk_product = ".$productid." AND contenancereel_value != 0 GROUP BY lot_number,contenancereel_units,rowid";
 	$PDOdb->Execute($sql);
 
 	$TLotNumber = array('');
