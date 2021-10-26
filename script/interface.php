@@ -169,7 +169,6 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
 			$Tres['DispatchTotalAssetsNumberInOF'] = $totalAssets;
 		}
 	}
-
 	return $Tres;
 }
 

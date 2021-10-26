@@ -582,6 +582,7 @@ function printJSTabImportAddLine()
 					cpt = 0;
 
 					$.each(json_results, function(index) {
+                        if(index == 'DispatchTotalAssetsNumberInOF') return;
 						var obj = json_results[index];
 						cpt ++;
 						$('#numserie').append($('<option>', {
