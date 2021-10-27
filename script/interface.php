@@ -119,14 +119,7 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
 			WHERE a.lot_number = '".$lot_number."'
 			AND a.fk_product = ".$productid;
 
-	//Si l'équipement est attribué à une autre expédition qui a le statut brouillon ou validé, on ne le propose pas
-    $exp = new Expedition($db);
-    if(!empty($expeditionID)) {
-        $exp->fetch($expeditionID);
-        if($exp->statut == Expedition::STATUS_DRAFT || $exp->statut == Expedition::STATUS_VALIDATED ) {
-            $sql.= " AND a.rowid NOT IN (SELECT eda2.fk_asset FROM ".MAIN_DB_PREFIX."expeditiondet_asset as eda2 LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet as ed2 ON (ed2.rowid = eda2.fk_expeditiondet) LEFT JOIN ".MAIN_DB_PREFIX."expedition as e2 ON (e2.rowid = ed2.fk_expedition) WHERE e2.fk_statut < 2)";
-        }
-    }
+
 	if(! empty($societe->id))
 	{
 		// Par défaut, dispatch associe un équipement réceptionné par commande fournisseur à une société qui porte le même nom que $mysoc
@@ -145,7 +138,14 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
 	$sql.= "
 			GROUP BY a.rowid
 			HAVING NOT(GROUP_CONCAT(e.rowid) IS NOT NULL AND GROUP_CONCAT(e.rowid, ',') REGEXP '(^|\,)" . $expeditionID .  "(\,|$)')";
-
+	//Si l'équipement est attribué à une autre expédition qui a le statut brouillon ou validé, on ne le propose pas
+    $exp = new Expedition($db);
+    if(!empty($expeditionID)) {
+        $exp->fetch($expeditionID);
+        if($exp->statut == Expedition::STATUS_DRAFT || $exp->statut == Expedition::STATUS_VALIDATED ) {
+            $sql.= " AND SUM(a.contenancereel_value) <= (SELECT SUM(eda2.weight) FROM ".MAIN_DB_PREFIX."expeditiondet_asset as eda2 LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet as ed2 ON (ed2.rowid = eda2.fk_expeditiondet) LEFT JOIN ".MAIN_DB_PREFIX."expedition as e2 ON (e2.rowid = ed2.fk_expedition) WHERE e2.fk_statut < 2)";
+        }
+    }
 //echo $sql;
 
 	$PDOdb->Execute($sql);
@@ -169,7 +169,6 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
 			$Tres['DispatchTotalAssetsNumberInOF'] = $totalAssets;
 		}
 	}
-
 	return $Tres;
 }
 
