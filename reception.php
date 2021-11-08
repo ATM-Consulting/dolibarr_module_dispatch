@@ -202,7 +202,7 @@
 					$asset->load_asset_type($PDOdb);
 					$line['numserie'] = $asset->getNextValue($PDOdb,$commandefourn->thirdparty);
 					setEventMessage( $langs->trans('createNumSerieOnTheFly', $line['numserie']),"warning");
-
+                    $receptDetailLine->numserie = $receptDetailLine->serial_number = $line['numserie'];
 					$TImport = _addCommandedetLine($PDOdb,$TImport,$commandefourn,$product->ref,$line['numserie'],$line['imei'],$line['firmware'],$line['lot_number'],($line['quantity']) ? $line['quantity'] : 1,$line['quantity_unit'],$line['dluo'], $k, $line['entrepot'], $comment);
 				}
 
@@ -215,7 +215,6 @@
 			else if(!$asset->loadReference($PDOdb, $line['numserie'], $line['fk_product']) || !empty($conf->global->DISPATCH_ALLOW_DISPATCHING_EXISTING_ASSET)) {
 				// si inexistant
 				//Seulement si nouvelle ligne
-
 				if($k == -1){
 					_addCommandedetLine($PDOdb,$TImport,$commandefourn,$line['ref'],$line['numserie'],$line['$imei'],$line['$firmware'],$line['lot_number'],$line['quantity'],$line['quantity_unit'],null,null,$line['fk_warehouse'], $comment);
 				}
@@ -296,7 +295,6 @@
 				$stock = new TAssetStock;
 				$stock->mouvement_stock($PDOdb, $user, $asset->getId(), $asset->contenancereel_value, $langs->trans("DispatchSupplierOrder",$commandefourn->ref), $commandefourn->id);
 	*/
-
 				if($asset->serial_number != $line['numserie'])	$receptDetailLine->numserie = $receptDetailLine->serial_number = $asset->serial_number;
 				$receptDetailLine->already_dispatch = 1;
 				$receptDetailLine->save($PDOdb);
@@ -609,7 +607,6 @@ function _addCommandedetLine(&$PDOdb,&$TImport,&$commandefourn,$refproduit,$nums
 		 $recepdetail->weight_reel = 1;
 		 $recepdetail->weight_unit = 0;
 		 $recepdetail->weight_reel_unit = 0;*/
-
 		$recepdetail->save($PDOdb);
 	}
     $currentLine = array(
