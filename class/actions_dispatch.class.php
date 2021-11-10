@@ -208,110 +208,104 @@ class ActionsDispatch
 					$expedition = new Expedition($object->db);
 					$expedition->fetch($object->origin_id);
 				}
-				foreach ($object->lines as &$line) {
+                foreach($object->lines as &$line) {
+                    $details = new TDispatchDetail;
 
-					$details = new TDispatchDetail;
+                    $fkExpeditionLine = $line->id;
 
-					$fkExpeditionLine = $line->id;
+                    if(get_class($object) == 'Livraison') {
+                        $fkExpeditionLine = 0;
 
-					if (get_class($object) == 'Livraison') {
-						$fkExpeditionLine = 0;
+                        foreach($expedition->lines as $lineExpe) {
+                            if($lineExpe->fk_origin_line == $line->fk_origin_line) { // La ligne d'origine de la livraison est la ligne de commande et non la ligne d'expédition
+                                $fkExpeditionLine = $lineExpe->id;
+                                break;
+                            }
+                        }
+                    }
 
-						foreach ($expedition->lines as $lineExpe) {
-							if ($lineExpe->fk_origin_line == $line->fk_origin_line) { // La ligne d'origine de la livraison est la ligne de commande et non la ligne d'expédition
-								$fkExpeditionLine = $lineExpe->id;
-								break;
-							}
-						}
-					}
+                    if(! empty($parameters['object']) && get_class($object) == 'CommandeFournisseur') {
+                        $PDOdb = new TPDOdb;
 
-					if (!empty($parameters['object']) && get_class($object) == 'CommandeFournisseur') {
+                        $outputlangs = $parameters['outputlangs'];
+                        $outputlangs->load(ATM_ASSET_NAME.'@'.ATM_ASSET_NAME);
+                        $outputlangs->load('productbatch');
+                        $outputlangs->load('dispatch@dispatch');
 
-						$PDOdb = new TPDOdb;
+                        foreach($object->lines as &$line) {
+                            $details = new TRecepDetail;
+                            $TRecepDetail = $details->LoadAllBy($PDOdb, array('fk_commandedet' => $line->id));
 
-						$outputlangs = $parameters['outputlangs'];
-						$outputlangs->load(ATM_ASSET_NAME . '@' . ATM_ASSET_NAME);
-						$outputlangs->load('productbatch');
-						$outputlangs->load('dispatch@dispatch');
+                            if(count($TRecepDetail) > 0) {
+                                $line->desc .= '<br>'.$outputlangs->trans('ProductsReceived').' :';
 
-						foreach ($object->lines as &$line) {
-							$details = new TRecepDetail;
-							$TRecepDetail = $details->LoadAllBy($PDOdb, array('fk_commandedet' => $line->id));
+                                foreach($TRecepDetail as $detail) {
+                                    $asset = new TAsset;
+                                    $asset->loadBy($PDOdb, $detail->serial_number, 'serial_number');
+                                    $asset->load_asset_type($PDOdb);
+                                    $this->_addAssetToLineDesc($line, $detail, $asset, $outputlangs);
+                                }
+                            }
+                        }
+                    }
 
-							if (count($TRecepDetail) > 0) {
-								$line->desc .= '<br>' . $outputlangs->trans('ProductsReceived') . ' :';
+                    if(! empty($fkExpeditionLine)) {
+                        $TRecepDetail = $details->LoadAllBy($PDOdb, array('fk_expeditiondet' => $fkExpeditionLine));
 
-								foreach ($TRecepDetail as $detail) {
+                        if(count($TRecepDetail) > 0) {
+                            if(! empty($line->description) && $line->description != $line->desc) $line->desc .= $line->description.'<br />'; // Sinon Dans certains cas desc écrase description
+                            $line->desc .= '<br>'.$outputlangs->trans('ProductsSent').' :';
 
-									$asset = new TAsset;
-									$asset->loadBy($PDOdb, $detail->serial_number, 'serial_number');
-									$asset->load_asset_type($PDOdb);
-									$this->_addAssetToLineDesc($line, $detail, $asset, $outputlangs);
-								}
-							}
+                            $TCompareDetails = array();
 
-						}
-					}
-				}
+                            foreach($TRecepDetail as $detail) {
+                                // Grouping with conf
+                                if(! empty($conf->global->DISPATCH_GROUP_DETAILS_ON_PDF) && intval($detail->fk_asset) > 0) {
+                                    $asset = new TAsset;
+                                    $asset->load($PDOdb, $detail->fk_asset);
+                                    $newComparaison = $this->getArrayForAssetToLineDescCompare($detail, $asset, $outputlangs);
 
-				if (!empty($fkExpeditionLine)) {
-					$TRecepDetail = $details->LoadAllBy($PDOdb, array('fk_expeditiondet' => $fkExpeditionLine));
+                                    $isGrouped = false;
+                                    //This condition exists for the first case : key = 0
+                                    if(! empty($TCompareDetails)) {
+                                        foreach($TCompareDetails as $compKey => $compareDetail) {
+                                            //Comparing lot numbers between them
+                                            $resComp = array_diff_assoc($newComparaison, $compareDetail->TCompare);
+                                            if(empty($resComp)) {
+                                                $isGrouped = true;
+                                                $TCompareDetails[$compKey]->total_weight_reel += doubleval($detail->weight_reel);
+                                                break;
+                                            }
+                                        }
+                                    }
 
-					if (count($TRecepDetail) > 0) {
-						if (!empty($line->description) && $line->description != $line->desc)
-							$line->desc .= $line->description . '<br />'; // Sinon Dans certains cas desc écrase description
-						$line->desc .= '<br>' . $outputlangs->trans('ProductsSent') . ' :';
+                                    if(! $isGrouped) {
+                                        //Creation of the first element
+                                        $compareDetail = new stdClass();
+                                        $compareDetail->total_weight_reel = doubleval($line->qty);
+                                        $compareDetail->TCompare = $newComparaison;
+                                        $TCompareDetails[] = $compareDetail;
+                                    }
+                                }
+                                else {
+                                    $asset = new TAsset;
+                                    $asset->loadBy($PDOdb, $detail->lot_number, 'lot_number');
+                                    $asset->load_asset_type($PDOdb);
+                                    $this->_addAssetToLineDesc($line, $detail, $asset, $outputlangs);
+                                }
+                            }
 
-						$TCompareDetails = array();
-
-						foreach ($TRecepDetail as $detail) {
-							// Grouping with conf
-							if (!empty($conf->global->DISPATCH_GROUP_DETAILS_ON_PDF) && intval($detail->fk_asset) > 0) {
-
-								$asset = new TAsset;
-								$asset->load($PDOdb, $detail->fk_asset);
-								$newComparaison = $this->getArrayForAssetToLineDescCompare($detail, $asset, $outputlangs);
-
-								$isGrouped = false;
-								//This condition exists for the first case : key = 0
-								if (!empty($TCompareDetails)) {
-									foreach ($TCompareDetails as $compKey => $compareDetail) {
-										//Comparing lot numbers between them
-										$resComp = array_diff_assoc($newComparaison, $compareDetail->TCompare);
-										if (empty($resComp)) {
-											$isGrouped = true;
-											$TCompareDetails[$compKey]->total_weight_reel += doubleval($detail->weight_reel);
-											break;
-										}
-									}
-								}
-
-								if (!$isGrouped) {
-									//Creation of the first element
-									$compareDetail = new stdClass();
-									$compareDetail->total_weight_reel = doubleval($line->qty);
-									$compareDetail->TCompare = $newComparaison;
-									$TCompareDetails[] = $compareDetail;
-								}
-							}
-							else {
-								$asset = new TAsset;
-								$asset->loadBy($PDOdb, $detail->lot_number, 'lot_number');
-								$asset->load_asset_type($PDOdb);
-								$this->_addAssetToLineDesc($line, $detail, $asset, $outputlangs);
-							}
-						}
-
-						if (!empty($TCompareDetails)) {
-							foreach ($TCompareDetails as $compareDetail) {
-								$this->_addAssetGroupToLineDesc($line, $compareDetail, $outputlangs);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+                            if(! empty($TCompareDetails)) {
+                                foreach($TCompareDetails as $compareDetail) {
+                                    $this->_addAssetGroupToLineDesc($line, $compareDetail, $outputlangs);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 	/**
 	 * @param $detail
