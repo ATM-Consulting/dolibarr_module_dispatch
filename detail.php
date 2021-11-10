@@ -438,7 +438,7 @@ function tabImportAddLine(&$PDOdb, &$expedition, $form, $fullColspan)
 <?php } ?>
 					</td>
 					<td id="newline_numserie" style="visibility:hidden"><?php echo $form->combo_sexy('','numserie',$TSerialNumber,''); ?></td>
-					<td id="newline_quantity" style="visibility:hidden"><input type="number" name="quantity" id="quantity" class="text" min="0" />
+					<td id="newline_quantity" style="visibility:hidden"><input type="number" step="0.01" name="quantity" id="quantity" class="text" min="0" />
 						<?php
 						if(intval(DOL_VERSION) < 10 ) {
 							echo $DoliFormProduct->load_measuring_units('quantity_unit" id="quantity_unit', 'weight');
