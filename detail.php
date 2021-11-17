@@ -372,7 +372,12 @@ function tabImport(&$TImport,&$expedition)
 	}
 }
 
-
+/**
+ * @param TPDOdb $PDOdb
+ * @param Expedition $expedition
+ * @param TFormCore $form
+ * @param $fullColspan
+ */
 function tabImportAddLine(&$PDOdb, &$expedition, $form, $fullColspan)
 {
 	global $conf, $db, $hookmanager, $langs;
@@ -585,10 +590,18 @@ function printJSTabImportAddLine()
                         if(index == 'DispatchTotalAssetsNumberInOF') return;
 						var obj = json_results[index];
 						cpt ++;
-						$('#numserie').append($('<option>', {
+
+
+						let $newOption = $('<option>', {
 							value: obj.serial_number,
 							text: obj.serial_number + ' - ' + obj.qty + ' ' +obj.unite_string
-						}));
+						});
+
+						$newOption.data('qty', obj.qty);
+						$newOption.data('unite_string', obj.unite_string);
+						$newOption.data('serial_number', obj.serial_number);
+
+						$('#numserie').append($newOption);
 
 						if(cpt == 1) { // A ne faire que pour le premier résultat
 							var qtyOrder = $('#lineexpeditionid option:selected').attr('qty');
@@ -610,20 +623,8 @@ function printJSTabImportAddLine()
 							}
 						}
 
-						$('#numserie').change(function() {
-							var numserie = $(this).val();
-
-							if(numserie && numserie.length > 0)
-							{
-								$('#quantity').show();
-								$('#units_label').text(obj.unite);
-								$('#newline_quantity').css({ visibility: 'visible' });
-							}
-							else
-							{
-								$('#newline_quantity').css({ visibility: 'hidden' });
-							}
-						});
+						// force trigger change to trow actions
+						$('#numserie').trigger('change');
 					});
 
 					if((elem.is('input') && $('#lineexpeditionid').val().length > 0) || (lot_number && lot_number.length > 0))
@@ -635,6 +636,22 @@ function printJSTabImportAddLine()
 						$('#newline_numserie').css({ visibility: 'hidden' });
 					}
 				});
+			});
+
+			$('#numserie').change(function() {
+				var numserie = $(this).val();
+
+				if(numserie && numserie.length > 0)
+				{
+					$('#quantity').show();
+					$('#quantity').val($(this).data('qty')).prop('max', $(this).data('qty'));
+					$('#units_label').text($(this).data('unite_string'));
+					$('#newline_quantity').css({ visibility: 'visible' });
+				}
+				else
+				{
+					$('#newline_quantity').css({ visibility: 'hidden' });
+				}
 			});
 
 			$('#lineexpeditionid').change(function() {
