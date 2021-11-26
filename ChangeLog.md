@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ## Version 3.5 - 2021-07-06
 
-- FIX: on shipment validate use newref instead of ref - 3.5.9 - *26/11/2021*
+- FIX: on shipment validate use newref instead of ref - 3.5.10 - *26/11/2021*
 - FIX : Js Ajax and form for dispatching new element - 3.5.9 - *17/11/2021*
 - FIX : order reception - if DISPATCH_CREATE_NUMSERIE_ON_RECEPTION_IF_LOT activated wwe must give serialnumber to data or it will overide with empty serial number - 3.5.8 - *03/11/2021*
 - FIX : expedition detaim - display asset with enough qty - 3.5.7 - *25/10/2021*
