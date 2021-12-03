@@ -128,3 +128,5 @@ ResultSetEquipmentError = Une erreur est survenue dans la requête des équipeme
 ErrorAtResultSet = Une erreur est survenue dans la requête de %s
 ErrorUnableToFetchLine=Impossible de récupérer la ligne %d
 ErrorAtSaveObjectRecepDetail = Une erreur est survenue lors de l'enregistrement en base de données
+DISPATCH_ALLOW_DISPATCHING_IGNORING_LOCALISATION=Ignorer la localisation dans le détail des équipements sur une expédition
+DISPATCH_ALLOW_SENDING_SAME_PRODUCT_IN_SAME_EXP=Possibilité d'envoyer un numéro de série déjà présent dans une même expédition

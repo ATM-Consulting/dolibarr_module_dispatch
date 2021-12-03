@@ -207,6 +207,22 @@
 	print ajax_constantonoff('DISPATCH_GROUP_DETAILS_ON_PDF');
 	print '</td></tr>';
 
+	$var=!$var;
+	print '<tr '.$bc[$var].'>';
+	print '<td>'.$langs->trans('DISPATCH_ALLOW_DISPATCHING_IGNORING_LOCALISATION').'</td>';
+	print '<td align="center" width="20">&nbsp;</td>';
+	print '<td align="center" width="300">';
+	print ajax_constantonoff('DISPATCH_ALLOW_DISPATCHING_IGNORING_LOCALISATION');
+	print '</td></tr>';
+
+	$var=!$var;
+	print '<tr '.$bc[$var].'>';
+	print '<td>'.$langs->trans('DISPATCH_ALLOW_SENDING_SAME_PRODUCT_IN_SAME_EXP').'</td>';
+	print '<td align="center" width="20">&nbsp;</td>';
+	print '<td align="center" width="300">';
+	print ajax_constantonoff('DISPATCH_ALLOW_SENDING_SAME_PRODUCT_IN_SAME_EXP');
+	print '</td></tr>';
+
 	print "</table>";
 
 	dol_fiche_end();
