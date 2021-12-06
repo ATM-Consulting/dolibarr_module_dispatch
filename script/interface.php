@@ -119,16 +119,17 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
 			WHERE a.lot_number = '".$lot_number."'
 			AND a.fk_product = ".$productid;
 
-
-	if(! empty($societe->id))
-	{
-		// Par défaut, dispatch associe un équipement réceptionné par commande fournisseur à une société qui porte le même nom que $mysoc
-		$sql.= "
+    if(empty($conf->global->DISPATCH_ALLOW_DISPATCHING_IGNORING_LOCALISATION)) {
+        if(! empty($societe->id)) {
+            // Par défaut, dispatch associe un équipement réceptionné par commande fournisseur à une société qui porte le même nom que $mysoc
+            $sql .= "
 			AND (COALESCE(a.fk_societe_localisation, 0) IN (0, ".$societe->id."))";
-	} else {
-		$sql.= "
+        }
+        else {
+            $sql .= "
 			AND COALESCE(a.fk_societe_localisation, 0) = 0";
-	}
+        }
+    }
 
 	if(! empty($warehouseID)) {
 		$sql.= "
@@ -137,7 +138,8 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
 
 	$sql.= "
 			GROUP BY a.rowid
-			HAVING NOT(GROUP_CONCAT(e.rowid) IS NOT NULL AND GROUP_CONCAT(e.rowid, ',') REGEXP '(^|\,)" . $expeditionID .  "(\,|$)')";
+			HAVING 1=1";
+    if(empty($conf->global->DISPATCH_ALLOW_SENDING_SAME_PRODUCT_IN_SAME_EXP)) $sql .= " AND NOT(GROUP_CONCAT(e.rowid) IS NOT NULL AND GROUP_CONCAT(e.rowid, ',') REGEXP '(^|\,)" . $expeditionID .  "(\,|$)')";
 	//Si l'équipement est attribué à une autre expédition qui a le statut brouillon ou validé, on ne le propose pas
     $exp = new Expedition($db);
     if(!empty($expeditionID)) {
