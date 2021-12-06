@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+## Version 3.6 - 2021-12-03
+- NEW : Conf permettant d'ignorer la localisation ainsi que d'ajouter un num serie dans une meme exped - 3.6.0 - *03/12/2021*
+
 ## Version 3.5 - 2021-07-06
 
 - FIX: on shipment validate use newref instead of ref - 3.5.10 - *26/11/2021*
