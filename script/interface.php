@@ -145,10 +145,10 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
     if(!empty($expeditionID)) {
         $exp->fetch($expeditionID);
         if($exp->statut == Expedition::STATUS_DRAFT || $exp->statut == Expedition::STATUS_VALIDATED ) {
-            $sql.= " AND SUM(a.contenancereel_value) <= (SELECT SUM(eda2.weight) FROM ".MAIN_DB_PREFIX."expeditiondet_asset as eda2 LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet as ed2 ON (ed2.rowid = eda2.fk_expeditiondet) LEFT JOIN ".MAIN_DB_PREFIX."expedition as e2 ON (e2.rowid = ed2.fk_expedition) WHERE e2.fk_statut < 2)";
+            $sql.= " AND SUM(a.contenancereel_value) > (SELECT COALESCE(SUM(eda2.weight),0) FROM ".MAIN_DB_PREFIX."expeditiondet_asset as eda2 LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet as ed2 ON (ed2.rowid = eda2.fk_expeditiondet) LEFT JOIN ".MAIN_DB_PREFIX."expedition as e2 ON (e2.rowid = ed2.fk_expedition) WHERE e2.fk_statut < 2 AND eda2.fk_asset = a.rowid)";
         }
     }
-//echo $sql;
+
 
 	$PDOdb->Execute($sql);
 	$TAssetIds = $PDOdb->Get_All();

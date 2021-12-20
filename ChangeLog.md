@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## Version 3.6 - 2021-12-03
+- FIX : les équipements n'apparaissaient pas dans le select des exped - 3.6.2 - *20/12/2021*
 - FIX : detail.php, la quantité ne s'affichait plus automatiquement, erreur de js (ligne commentée) - 3.6.1 - *07/12/2021*
 
 - NEW : Conf permettant d'ignorer la localisation ainsi que d'ajouter un num serie dans une meme exped - 3.6.0 - *03/12/2021*
