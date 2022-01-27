@@ -89,6 +89,7 @@ DISPATCH_ALLOW_DISPATCHING_EXISTING_ASSET=Permettre de réceptionner plusieurs f
 
 AllSerialNumbersAdded=Les numéros de série ont été enregistré automatiquement
 NoMoreAssetAvailable=Aucun équipement disponible pour ce numéro de lot
+AssetsWithoutLotNumber=Equipements sans numéro de lot
 
 # Expedition Card
 colDispatch=N° de série / lot
