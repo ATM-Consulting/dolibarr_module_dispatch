@@ -116,8 +116,11 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
 			LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet_asset eda ON (eda.fk_asset = a.rowid)
 			LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet ed ON (ed.rowid = eda.fk_expeditiondet)
 			LEFT JOIN ".MAIN_DB_PREFIX."expedition e ON (e.rowid = ed.fk_expedition)
-			WHERE a.lot_number = '".$lot_number."'
-			AND a.fk_product = ".$productid;
+			WHERE a.fk_product = ".$productid;
+
+    // On ne prend pas en compte le numéro de lot dans la requête pour les équipements sans numéro de lot
+    if ($lot_number == -3) $sql .= " AND (a.lot_number IS NULL OR a.lot_number = '')";
+    else $sql .= " AND a.lot_number = '".$lot_number."'";
 
     if(empty($conf->global->DISPATCH_ALLOW_DISPATCHING_IGNORING_LOCALISATION)) {
         if(! empty($societe->id)) {
@@ -184,7 +187,7 @@ function _autocomplete_lot_number(&$PDOdb, $productid) {
 			WHERE fk_product = ".$productid." GROUP BY lot_number,contenancereel_units,rowid HAVING SUM(contenancereel_value) != 0";
 	$PDOdb->Execute($sql);
 
-	$TLotNumber = array('');
+	$TLotNumber = array('no_lot_number' => array('lot_number' => -3, 'label' => $langs->transnoentitiesnoconv('AssetsWithoutLotNumber')));
 	$PDOdb->Execute($sql);
 	$Tres = $PDOdb->Get_All();
 	foreach($Tres as $res){
