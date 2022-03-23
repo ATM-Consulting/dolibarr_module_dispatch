@@ -169,10 +169,18 @@
 
 	$var=!$var;
 	print '<tr '.$bc[$var].'>';
-	print '<td>'.$langs->trans('DISPATCH_RESET_ASSET_WAREHOUSE_ON_SHIPMENT').'</td>';
+	print '<td>'.$langs->trans('DISPATCH_RESET_ASSET_WAREHOUSE_ON_SHIPMENT_VALIDATE').'</td>';
 	print '<td align="center" width="20">&nbsp;</td>';
 	print '<td align="center" width="300">';
-	print ajax_constantonoff('DISPATCH_RESET_ASSET_WAREHOUSE_ON_SHIPMENT');
+	print ajax_constantonoff('DISPATCH_RESET_ASSET_WAREHOUSE_ON_SHIPMENT_VALIDATE');
+	print '</td></tr>';
+
+	$var=!$var;
+	print '<tr '.$bc[$var].'>';
+	print '<td>'.$langs->trans('DISPATCH_UNDO_STOCK_MOUVMENT_ON_SHIPMENT_DELETE').'</td>';
+	print '<td align="center" width="20">&nbsp;</td>';
+	print '<td align="center" width="300">';
+	print ajax_constantonoff('DISPATCH_UNDO_STOCK_MOUVMENT_ON_SHIPMENT_DELETE');
 	print '</td></tr>';
 
 	$var=!$var;
