@@ -82,7 +82,8 @@ BDRCalculateAuto=La ventilation est faite automatiquement à la %s du bon de ret
 BDRValidate=validation
 BDRClose=cloture
 
-DISPATCH_RESET_ASSET_WAREHOUSE_ON_SHIPMENT=Retirer l'entrepot de l'équipement à la validation de l'expédition
+DISPATCH_RESET_ASSET_WAREHOUSE_ON_SHIPMENT_VALIDATE=Retirer l'entrepot de l'équipement à la validation de l'expédition
+DISPATCH_UNDO_STOCK_MOUVMENT_ON_SHIPMENT_DELETE=Réalimenter les équipements à la suppression de l'expédition
 DISPATCH_SKIP_SERVICES=Ignorer les lignes de type service
 DISPATCH_STOCK_MOVEMENT_BY_ASSET=Lorsqu'il y a plusieurs équipements pour le même produit lors d'une réception, faire en sorte qu'il y ait un mouvement de stock par équipement, plutôt qu'un mouvement de stock global contenant tous les équipements
 DISPATCH_ALLOW_DISPATCHING_EXISTING_ASSET=Permettre de réceptionner plusieurs fois un équipement existant
