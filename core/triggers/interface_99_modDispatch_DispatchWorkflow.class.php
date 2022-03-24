@@ -132,7 +132,7 @@ class InterfaceDispatchWorkflow
 				$TDetail = $dispatchDetail->LoadAllBy($PDOdb, array('fk_expeditiondet' => $line->id));
 
 				foreach($TDetail as &$detail) {
-					if(!empty($conf->global->DISPATCH_RESET_ASSET_WAREHOUSE_ON_SHIPMENT)
+					if(!empty($conf->global->DISPATCH_RESET_ASSET_QTY_DELETE_SHIPMENT)
 						&& (($conf->global->STOCK_CALCULATE_ON_SHIPMENT && $object->statut > 0)
 							|| ($conf->global->STOCK_CALCULATE_ON_SHIPMENT_CLOSE && $object->statut == 2))) {
 						$asset = new TAsset;
@@ -299,7 +299,7 @@ class InterfaceDispatchWorkflow
 
 		// Destockage Dolibarr déjà fait par à la validation de l'expédition, et impossible de ne destocker que l'équipement : on save sans rien déstocker
 		$asset->save($PDOdb, $user, $langs->trans("ShipmentValidatedInDolibarr",$numref), -$poids_destocke, false, 0, true);
-		
+
 		$fk_dol_moov = 0;
 		if ($conf->global->DISPATCH_LINK_ASSET_TO_STOCK_MOOV)
 		{
