@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ## Version 3.7 - 2022-03-24
-- NEW : ajout conf "Réalimenter équipement à la suppression de l'expédition" pour la dissocier de "Retirer l'entrepot de l'équipement à la validation de l'expédition" - 3.7.0 - *21/03/2022*
+- NEW : ajout conf "Réalimenter équipement à la suppression de l'expédition" pour la dissocier de "Retirer l'entrepot de l'équipement à la validation de l'expédition" - 3.7.0 - *24/03/2022*
 
 ## Version 3.6 - 2021-12-03
 - FIX : il n'était pas possible d'ajouter un équipement avec numéro de série sans numéro de lot dans le détail d'une expédition - 3.6.3 - *27/01/2022*
