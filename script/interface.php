@@ -120,14 +120,16 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
 			AND a.fk_product = ".$productid;
 
 
+	// note dans le cas des asset avec gestion de stock quantitatif la notion de localisation n'a généralement pas de sens
+	// c'est pourquoi il faut désactiver le filtre de localisation sur les gestions quantitative
 	if(! empty($societe->id))
 	{
 		// Par défaut, dispatch associe un équipement réceptionné par commande fournisseur à une société qui porte le même nom que $mysoc
 		$sql.= "
-			AND (COALESCE(a.fk_societe_localisation, 0) IN (0, ".$societe->id."))";
+			AND ( COALESCE(a.fk_societe_localisation, 0) IN (0, ".$societe->id.") OR a.gestion_stock = 'QUANTITY' )";
 	} else {
 		$sql.= "
-			AND COALESCE(a.fk_societe_localisation, 0) = 0";
+			AND ( COALESCE(a.fk_societe_localisation, 0) = 0 OR a.gestion_stock = 'QUANTITY' )";
 	}
 
 	if(! empty($warehouseID)) {
