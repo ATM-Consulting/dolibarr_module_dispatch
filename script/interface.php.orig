@@ -122,19 +122,31 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
     if ($lot_number == -3) $sql .= " AND (a.lot_number IS NULL OR a.lot_number = '')";
     else $sql .= " AND a.lot_number = '".$lot_number."'";
 
+<<<<<<< HEAD
     if(empty($conf->global->DISPATCH_ALLOW_DISPATCHING_IGNORING_LOCALISATION)) {
-		// note dans le cas des asset avec gestion de stock quantitatif la notion de localisation n'a généralement pas de sens
-		// c'est pourquoi il faut désactiver le filtre de localisation sur les gestions quantitative
-		if(! empty($societe->id))
-		{
-			// Par défaut, dispatch associe un équipement réceptionné par commande fournisseur à une société qui porte le même nom que $mysoc
-			$sql.= "
-				AND ( COALESCE(a.fk_societe_localisation, 0) IN (0, ".$societe->id.") OR a.gestion_stock = 'QUANTITY' )";
-		} else {
-			$sql.= "
-				AND ( COALESCE(a.fk_societe_localisation, 0) = 0 OR a.gestion_stock = 'QUANTITY' )";
-		}
+        if(! empty($societe->id)) {
+            // Par défaut, dispatch associe un équipement réceptionné par commande fournisseur à une société qui porte le même nom que $mysoc
+            $sql .= "
+			AND (COALESCE(a.fk_societe_localisation, 0) IN (0, ".$societe->id."))";
+        }
+        else {
+            $sql .= "
+			AND COALESCE(a.fk_societe_localisation, 0) = 0";
+        }
     }
+=======
+	// note dans le cas des asset avec gestion de stock quantitatif la notion de localisation n'a généralement pas de sens
+	// c'est pourquoi il faut désactiver le filtre de localisation sur les gestions quantitative
+	if(! empty($societe->id))
+	{
+		// Par défaut, dispatch associe un équipement réceptionné par commande fournisseur à une société qui porte le même nom que $mysoc
+		$sql.= "
+			AND ( COALESCE(a.fk_societe_localisation, 0) IN (0, ".$societe->id.") OR a.gestion_stock = 'QUANTITY' )";
+	} else {
+		$sql.= "
+			AND ( COALESCE(a.fk_societe_localisation, 0) = 0 OR a.gestion_stock = 'QUANTITY' )";
+	}
+>>>>>>> 670a84056acb3657683865bb043ca1dfabcc80da
 
 	if(! empty($warehouseID)) {
 		$sql.= "

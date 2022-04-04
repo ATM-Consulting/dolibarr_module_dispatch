@@ -116,25 +116,19 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
 			LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet_asset eda ON (eda.fk_asset = a.rowid)
 			LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet ed ON (ed.rowid = eda.fk_expeditiondet)
 			LEFT JOIN ".MAIN_DB_PREFIX."expedition e ON (e.rowid = ed.fk_expedition)
-			WHERE a.fk_product = ".$productid;
+			WHERE a.lot_number = '".$lot_number."'
+			AND a.fk_product = ".$productid;
 
-    // On ne prend pas en compte le numéro de lot dans la requête pour les équipements sans numéro de lot
-    if ($lot_number == -3) $sql .= " AND (a.lot_number IS NULL OR a.lot_number = '')";
-    else $sql .= " AND a.lot_number = '".$lot_number."'";
 
-    if(empty($conf->global->DISPATCH_ALLOW_DISPATCHING_IGNORING_LOCALISATION)) {
-		// note dans le cas des asset avec gestion de stock quantitatif la notion de localisation n'a généralement pas de sens
-		// c'est pourquoi il faut désactiver le filtre de localisation sur les gestions quantitative
-		if(! empty($societe->id))
-		{
-			// Par défaut, dispatch associe un équipement réceptionné par commande fournisseur à une société qui porte le même nom que $mysoc
-			$sql.= "
-				AND ( COALESCE(a.fk_societe_localisation, 0) IN (0, ".$societe->id.") OR a.gestion_stock = 'QUANTITY' )";
-		} else {
-			$sql.= "
-				AND ( COALESCE(a.fk_societe_localisation, 0) = 0 OR a.gestion_stock = 'QUANTITY' )";
-		}
-    }
+	if(! empty($societe->id))
+	{
+		// Par défaut, dispatch associe un équipement réceptionné par commande fournisseur à une société qui porte le même nom que $mysoc
+		$sql.= "
+			AND (COALESCE(a.fk_societe_localisation, 0) IN (0, ".$societe->id."))";
+	} else {
+		$sql.= "
+			AND COALESCE(a.fk_societe_localisation, 0) = 0";
+	}
 
 	if(! empty($warehouseID)) {
 		$sql.= "
@@ -143,17 +137,16 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
 
 	$sql.= "
 			GROUP BY a.rowid
-			HAVING 1=1";
-    if(empty($conf->global->DISPATCH_ALLOW_SENDING_SAME_PRODUCT_IN_SAME_EXP)) $sql .= " AND NOT(GROUP_CONCAT(e.rowid) IS NOT NULL AND GROUP_CONCAT(e.rowid, ',') REGEXP '(^|\,)" . $expeditionID .  "(\,|$)')";
+			HAVING NOT(GROUP_CONCAT(e.rowid) IS NOT NULL AND GROUP_CONCAT(e.rowid, ',') REGEXP '(^|\,)" . $expeditionID .  "(\,|$)')";
 	//Si l'équipement est attribué à une autre expédition qui a le statut brouillon ou validé, on ne le propose pas
     $exp = new Expedition($db);
     if(!empty($expeditionID)) {
         $exp->fetch($expeditionID);
         if($exp->statut == Expedition::STATUS_DRAFT || $exp->statut == Expedition::STATUS_VALIDATED ) {
-            $sql.= " AND SUM(a.contenancereel_value) > (SELECT COALESCE(SUM(eda2.weight),0) FROM ".MAIN_DB_PREFIX."expeditiondet_asset as eda2 LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet as ed2 ON (ed2.rowid = eda2.fk_expeditiondet) LEFT JOIN ".MAIN_DB_PREFIX."expedition as e2 ON (e2.rowid = ed2.fk_expedition) WHERE e2.fk_statut < 2 AND eda2.fk_asset = a.rowid)";
+            $sql.= " AND SUM(a.contenancereel_value) <= (SELECT SUM(eda2.weight) FROM ".MAIN_DB_PREFIX."expeditiondet_asset as eda2 LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet as ed2 ON (ed2.rowid = eda2.fk_expeditiondet) LEFT JOIN ".MAIN_DB_PREFIX."expedition as e2 ON (e2.rowid = ed2.fk_expedition) WHERE e2.fk_statut < 2)";
         }
     }
-
+//echo $sql;
 
 	$PDOdb->Execute($sql);
 	$TAssetIds = $PDOdb->Get_All();
@@ -189,7 +182,7 @@ function _autocomplete_lot_number(&$PDOdb, $productid) {
 			WHERE fk_product = ".$productid." GROUP BY lot_number,contenancereel_units,rowid HAVING SUM(contenancereel_value) != 0";
 	$PDOdb->Execute($sql);
 
-	$TLotNumber = array('no_lot_number' => array('lot_number' => -3, 'label' => $langs->transnoentitiesnoconv('AssetsWithoutLotNumber')));
+	$TLotNumber = array('');
 	$PDOdb->Execute($sql);
 	$Tres = $PDOdb->Get_All();
 	foreach($Tres as $res){
