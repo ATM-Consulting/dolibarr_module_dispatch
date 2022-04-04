@@ -122,19 +122,31 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
     if ($lot_number == -3) $sql .= " AND (a.lot_number IS NULL OR a.lot_number = '')";
     else $sql .= " AND a.lot_number = '".$lot_number."'";
 
+<<<<<<< HEAD
     if(empty($conf->global->DISPATCH_ALLOW_DISPATCHING_IGNORING_LOCALISATION)) {
-		// note dans le cas des asset avec gestion de stock quantitatif la notion de localisation n'a généralement pas de sens
-		// c'est pourquoi il faut désactiver le filtre de localisation sur les gestions quantitative
-		if(! empty($societe->id))
-		{
-			// Par défaut, dispatch associe un équipement réceptionné par commande fournisseur à une société qui porte le même nom que $mysoc
-			$sql.= "
-				AND ( COALESCE(a.fk_societe_localisation, 0) IN (0, ".$societe->id.") OR a.gestion_stock = 'QUANTITY' )";
-		} else {
-			$sql.= "
-				AND ( COALESCE(a.fk_societe_localisation, 0) = 0 OR a.gestion_stock = 'QUANTITY' )";
-		}
+        if(! empty($societe->id)) {
+            // Par défaut, dispatch associe un équipement réceptionné par commande fournisseur à une société qui porte le même nom que $mysoc
+            $sql .= "
+			AND (COALESCE(a.fk_societe_localisation, 0) IN (0, ".$societe->id."))";
+        }
+        else {
+            $sql .= "
+			AND COALESCE(a.fk_societe_localisation, 0) = 0";
+        }
     }
+=======
+	// note dans le cas des asset avec gestion de stock quantitatif la notion de localisation n'a généralement pas de sens
+	// c'est pourquoi il faut désactiver le filtre de localisation sur les gestions quantitative
+	if(! empty($societe->id))
+	{
+		// Par défaut, dispatch associe un équipement réceptionné par commande fournisseur à une société qui porte le même nom que $mysoc
+		$sql.= "
+			AND ( COALESCE(a.fk_societe_localisation, 0) IN (0, ".$societe->id.") OR a.gestion_stock = 'QUANTITY' )";
+	} else {
+		$sql.= "
+			AND ( COALESCE(a.fk_societe_localisation, 0) = 0 OR a.gestion_stock = 'QUANTITY' )";
+	}
+>>>>>>> 670a84056acb3657683865bb043ca1dfabcc80da
 
 	if(! empty($warehouseID)) {
 		$sql.= "
@@ -150,11 +162,7 @@ function _autocomplete_asset(&$PDOdb, $lot_number, $productid, $expeditionID, $e
     if(!empty($expeditionID)) {
         $exp->fetch($expeditionID);
         if($exp->statut == Expedition::STATUS_DRAFT || $exp->statut == Expedition::STATUS_VALIDATED ) {
-			$fk_statut = 2;
-			if(!empty($conf->global->STOCK_CALCULATE_ON_SHIPMENT)){
-				$fk_statut = 1;
-			}
-            $sql.= " AND SUM(a.contenancereel_value) > (SELECT COALESCE(SUM(eda2.weight),0) FROM ".MAIN_DB_PREFIX."expeditiondet_asset as eda2 LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet as ed2 ON (ed2.rowid = eda2.fk_expeditiondet) LEFT JOIN ".MAIN_DB_PREFIX."expedition as e2 ON (e2.rowid = ed2.fk_expedition) WHERE e2.fk_statut < ".$fk_statut." AND eda2.fk_asset = a.rowid)";
+            $sql.= " AND SUM(a.contenancereel_value) > (SELECT COALESCE(SUM(eda2.weight),0) FROM ".MAIN_DB_PREFIX."expeditiondet_asset as eda2 LEFT JOIN ".MAIN_DB_PREFIX."expeditiondet as ed2 ON (ed2.rowid = eda2.fk_expeditiondet) LEFT JOIN ".MAIN_DB_PREFIX."expedition as e2 ON (e2.rowid = ed2.fk_expedition) WHERE e2.fk_statut < 2 AND eda2.fk_asset = a.rowid)";
         }
     }
 
