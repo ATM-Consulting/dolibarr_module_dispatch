@@ -112,6 +112,9 @@ class InterfaceDispatchWorkflow
 
 		if(!defined('INC_FROM_DOLIBARR')) define('INC_FROM_DOLIBARR',true);
 
+		$update = '_MODIFY';
+		if (intval(DOL_VERSION) < 16) $update = '_UPDATE';
+
 		if ($action == 'SHIPPING_VALIDATE') {
 		    if (!empty($conf->global->STOCK_CALCULATE_ON_SHIPMENT)) {
 		        $this->move_assets_according_to_shipment($object);
@@ -243,7 +246,7 @@ class InterfaceDispatchWorkflow
 
 		}
 
-		if ($action == "LINEBONDERETOUR_UPDATE")
+		if ($action == 'LINEBONDERETOUR'.$update)
 		{
 			if (!empty($object->oldcopy))
 			{
