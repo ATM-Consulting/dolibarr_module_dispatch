@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ## Version 3.5 - 2021-07-06
 
+- FIX : error qty max detail.php to add a batch  - 3.5.12 - *29/06/2022*
 - FIX : SQL query doesn't check asset stock management type  - 3.5.11 - *01/04/2022*
 - FIX : on shipment validate use newref instead of ref - 3.5.10 - *26/11/2021*
 - FIX : Js Ajax and form for dispatching new element - 3.5.9 - *17/11/2021*
