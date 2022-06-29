@@ -640,11 +640,12 @@ function printJSTabImportAddLine()
 
 			$('#numserie').change(function() {
 				var numserie = $(this).val();
+				var optionselected = $('#numserie').find(":selected");
 
 				if(numserie && numserie.length > 0)
 				{
 					$('#quantity').show();
-					// $('#quantity').val($(this).data('qty')).prop('max', $(this).data('qty'));
+					$('#quantity').val(optionselected.data('qty')).prop('max', optionselected.data('qty'));
 					$('#units_label').text($(this).data('unite_string'));
 					$('#newline_quantity').css({ visibility: 'visible' });
 				}
