@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ## Version 3.7 - 2022-03-24
+
 - FIX : compat v16 blooper - 3.7.3 - *30/06/2022*
 - FIX : compat v16 - 3.7.2 - *16/06/2022* 
 - FIX : DA021689 - Gestion de la conf STOCK_CALCULATE_ON_SHIPMENT pour l'affichage des bons équipements - 3.7.1 - *01/04/2022* 
