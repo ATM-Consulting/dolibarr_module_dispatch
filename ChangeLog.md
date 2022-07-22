@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ## Version 3.7 - 2022-03-24
+
 - FIX : Missing icon - 3.7.4 - *22/07/2022*
 - FIX : compat v16 blooper - 3.7.3 - *30/06/2022*
 - FIX : compat v16 - 3.7.2 - *16/06/2022* 
@@ -11,10 +12,10 @@ All notable changes to this project will be documented in this file.
 - NEW : ajout conf "Réalimenter équipement à la suppression de l'expédition" pour la dissocier de "Retirer l'entrepot de l'équipement à la validation de l'expédition" - 3.7.0 - *24/03/2022*
 
 ## Version 3.6 - 2021-12-03
+
 - FIX : il n'était pas possible d'ajouter un équipement avec numéro de série sans numéro de lot dans le détail d'une expédition - 3.6.3 - *27/01/2022*
 - FIX : les équipements n'apparaissaient pas dans le select des exped - 3.6.2 - *20/12/2021*
 - FIX : detail.php, la quantité ne s'affichait plus automatiquement, erreur de js (ligne commentée) - 3.6.1 - *07/12/2021*
-
 - NEW : Conf permettant d'ignorer la localisation ainsi que d'ajouter un num serie dans une meme exped - 3.6.0 - *03/12/2021*
 
 ## Version 3.5 - 2021-07-06
