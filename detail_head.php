@@ -27,6 +27,8 @@ $langs->load('stocks');
 $langs->load('other');
 $langs->load('propal');
 
+$newToken = function_exists('newToken') ? newToken() : $_SESSION['newtoken'];
+
 $origin		= GETPOST('origin','alpha')?GETPOST('origin','alpha'):'expedition';   // Example: commande, propal
 $origin_id 	= GETPOST('id','int')?GETPOST('id','int'):'';
 if (empty($origin_id)) $origin_id  = GETPOST('origin_id','int');    // Id of order or propal
@@ -302,7 +304,7 @@ if (! empty($id) || ! empty($ref))
         if ($action == 'editshipping_method_id')
         {
             print '<form name="setshipping_method_id" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'" method="post">';
-            print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+            print '<input type="hidden" name="token" value="'.$newToken.'">';
             print '<input type="hidden" name="action" value="setshipping_method_id">';
             $object->fetch_delivery_methods();
             print $form->selectarray("shipping_method_id",$object->meths,$object->shipping_method_id,1,0,0,"",1);
