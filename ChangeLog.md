@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ## Version 3.7 - 2022-03-24
 
+- FIX : Compat v17 (token) - 3.7.5 - *31/03/2023*
 - FIX : Missing icon - 3.7.4 - *22/07/2022*
 - FIX : compat v16 blooper - 3.7.3 - *30/06/2022*
 - FIX : compat v16 - 3.7.2 - *16/06/2022* 
