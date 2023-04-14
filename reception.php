@@ -84,8 +84,9 @@
 
 	}
 	elseif(isset($_POST['bt_save']) || $_POST['ToDispatch']) {
-
-		foreach($_POST['TLine']  as $k=>$line) {
+		$TLine = array();
+		if (isset($_POST['TLine']) $TLine = $_POST['TLine'];
+		foreach($TLine as $k=>$line) {
 			//unset($TImport[(int)$k]); //AA mais à quoi ça sert
 
 			// Modification
@@ -134,7 +135,7 @@
 			setEventMessage('Modifications enregistrées');
 		}
 
-		if ($_POST['ToDispatch']) {
+		if (isset($_POST['ToDispatch'])) {
 			$ToDispatch = GETPOST('ToDispatch');
 			if(!empty($ToDispatch)) {
 				foreach($ToDispatch as $fk_product=>$dummy) {
