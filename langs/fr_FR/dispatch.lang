@@ -89,6 +89,7 @@ DISPATCH_ALLOW_DISPATCHING_EXISTING_ASSET=Permettre de réceptionner plusieurs f
 
 AllSerialNumbersAdded=Les numéros de série ont été enregistré automatiquement
 NoMoreAssetAvailable=Aucun équipement disponible pour ce numéro de lot
+AssetsWithoutLotNumber=Equipements sans numéro de lot
 
 # Expedition Card
 colDispatch=N° de série / lot
@@ -128,3 +129,8 @@ ResultSetEquipmentError = Une erreur est survenue dans la requête des équipeme
 ErrorAtResultSet = Une erreur est survenue dans la requête de %s
 ErrorUnableToFetchLine=Impossible de récupérer la ligne %d
 ErrorAtSaveObjectRecepDetail = Une erreur est survenue lors de l'enregistrement en base de données
+DISPATCH_ALLOW_DISPATCHING_IGNORING_LOCALISATION=Ignorer la localisation dans le détail des équipements sur une expédition
+DISPATCH_ALLOW_SENDING_SAME_PRODUCT_IN_SAME_EXP=Possibilité d'envoyer un numéro de série déjà présent dans une même expédition
+
+
+DISPATCH_RESET_ASSET_QTY_DELETE_SHIPMENT=Réalimenter équipement à la suppression de l'expédition

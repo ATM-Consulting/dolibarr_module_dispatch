@@ -343,7 +343,7 @@ function tabImport(&$TImport,&$expedition)
 ?>
 					<td>
 						<?php
-							if($canEdit) echo '<a href="?action=deleteline&k='.$k.'&id='.$expedition->id.'&rowid='.$Trowid[0].'">'.img_delete().'</a>';
+							if($canEdit) echo '<a href="?action=deleteline&k='.$k.'&id='.$expedition->id.'&rowid='.$Trowid[0].'&token='.newToken().'">'.img_delete().'</a>';
 						?>
 					</td>
 				</tr>

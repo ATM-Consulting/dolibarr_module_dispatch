@@ -177,6 +177,15 @@
 
 	$var=!$var;
 	print '<tr '.$bc[$var].'>';
+	print '<td>'.$langs->trans('DISPATCH_RESET_ASSET_QTY_DELETE_SHIPMENT').'</td>';
+	print '<td align="center" width="20">&nbsp;</td>';
+	print '<td align="center" width="300">';
+	print ajax_constantonoff('DISPATCH_RESET_ASSET_QTY_DELETE_SHIPMENT');
+	print '</td></tr>';
+
+
+	$var=!$var;
+	print '<tr '.$bc[$var].'>';
 	print '<td>'.$langs->trans('DISPATCH_SKIP_SERVICES').'</td>';
 	print '<td align="center" width="20">&nbsp;</td>';
 	print '<td align="center" width="300">';
@@ -205,6 +214,22 @@
 	print '<td align="center" width="20">&nbsp;</td>';
 	print '<td align="center" width="300">';
 	print ajax_constantonoff('DISPATCH_GROUP_DETAILS_ON_PDF');
+	print '</td></tr>';
+
+	$var=!$var;
+	print '<tr '.$bc[$var].'>';
+	print '<td>'.$langs->trans('DISPATCH_ALLOW_DISPATCHING_IGNORING_LOCALISATION').'</td>';
+	print '<td align="center" width="20">&nbsp;</td>';
+	print '<td align="center" width="300">';
+	print ajax_constantonoff('DISPATCH_ALLOW_DISPATCHING_IGNORING_LOCALISATION');
+	print '</td></tr>';
+
+	$var=!$var;
+	print '<tr '.$bc[$var].'>';
+	print '<td>'.$langs->trans('DISPATCH_ALLOW_SENDING_SAME_PRODUCT_IN_SAME_EXP').'</td>';
+	print '<td align="center" width="20">&nbsp;</td>';
+	print '<td align="center" width="300">';
+	print ajax_constantonoff('DISPATCH_ALLOW_SENDING_SAME_PRODUCT_IN_SAME_EXP');
 	print '</td></tr>';
 
 	print "</table>";
