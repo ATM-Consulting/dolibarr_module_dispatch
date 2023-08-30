@@ -61,7 +61,7 @@ class moddispatch extends DolibarrModules
 		// Possible values for version are: 'development', 'experimental', 'dolibarr' or version
 
 
-		$this->version = '3.7.5';
+		$this->version = '3.7.6';
 
 		// Key used in llx_const table to save module status enabled/disabled (where MYMODULE is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
