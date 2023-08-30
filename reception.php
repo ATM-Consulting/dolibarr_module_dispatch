@@ -85,7 +85,7 @@
 	}
 	elseif(isset($_POST['bt_save']) || $_POST['ToDispatch']) {
 		$TLine = array();
-		if (isset($_POST['TLine']) $TLine = $_POST['TLine'];
+		if (isset($_POST['TLine'])) $TLine = $_POST['TLine'];
 		foreach($TLine as $k=>$line) {
 			//unset($TImport[(int)$k]); //AA mais à quoi ça sert
 
