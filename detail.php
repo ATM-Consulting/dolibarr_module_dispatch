@@ -645,7 +645,7 @@ function printJSTabImportAddLine()
 				if(numserie && numserie.length > 0)
 				{
 					$('#quantity').show();
-					$('#quantity').val(optionselected.data('qty')).prop('max', optionselected.data('qty'));
+					//$('#quantity').val(optionselected.data('qty')).prop('max', optionselected.data('qty'));
 					$('#units_label').text($(this).data('unite_string'));
 					$('#newline_quantity').css({ visibility: 'visible' });
 				}
